@@ -34,11 +34,7 @@ export async function explainMedicalReport(conversation, ctx) {
     { reply_markup: goBackKeyboard }
   );
 
-  // Pass user response to analyzeMedication function
-  const medicalReportAnalysis = await analyzeMedication(ctx.message.text);
-
-  // Pass user response to analyzeMedicalReport function
-  await handleResponse(ctx, conversation, medicalReportAnalysis);
+  await handleResponse(ctx, conversation, analyzeMedicalReport);
 }
 
 export async function explainMedication(conversation, ctx) {
