@@ -52,7 +52,7 @@ export const analyzeMedicalReport = async (text) => {
       presence_penalty: 0,
     });
 
-    return gptResponse.data.choices[0].text.trim();
+    return gptResponse.choices[0].message.content;
   } catch (error) {
     console.error("Error in OpenAI API:", error.message);
     // Handle the error as per your application's requirements
