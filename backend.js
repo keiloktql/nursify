@@ -57,6 +57,25 @@ This chatbot serves to aid in understanding medication prescriptions but is not 
 Feel free to ask if you have any questions or need further explanation!
 `;
 
+const chatGPTWrapper = async (prompt) => {
+  // OpenAI API with chat completion
+  try {
+    const gptResponse = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-3.5-turbo",
+      temperature: 0.1,
+      frequency_penalty: 0,
+      presence_penalty: 0,
+    });
+
+    return gptResponse.choices[0].message.content;
+  } catch (error) {
+    console.error("Error in OpenAI API:", error.message);
+    // Handle the error as per your application's requirements
+    return "Error occurred during analysis";
+  }
+};
+
 export const loadPhoto = async (photoUrl) => {
   try {
     // Fetch image data
@@ -90,26 +109,19 @@ export const OCR = async (photo) => {
 
 export const analyzeMedicalReport = async (text) => {
   // Add the medical report text to the prompt template
-  const prompt = MEDICAL_REPORT_TEMPLATE.replace("{MEDICAL_REPORT_TEXT}", text);
+  const medicalReportPromptTemplate = MEDICAL_REPORT_TEMPLATE.replace(
+    "{MEDICAL_REPORT_TEXT}",
+    text
+  );
 
-  // OpenAI API with chat completion
-  try {
-    const gptResponse = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo",
-      temperature: 0.1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    });
-
-    return gptResponse.choices[0].message.content;
-  } catch (error) {
-    console.error("Error in OpenAI API:", error.message);
-    // Handle the error as per your application's requirements
-    return "Error occurred during analysis";
-  }
+  return await chatGPTWrapper(medicalReportPromptTemplate);
 };
 
 export const analyzeMedication = async (text) => {
-  return "Analyzed medication";
+  const medicationPromptTemplate = MEDICATION_TEMPLATE.replace(
+    "{MEDICAL_REPORT_TEXT}",
+    text
+  );
+
+  return await chatGPTWrapper(medicationPromptTemplate);
 };
