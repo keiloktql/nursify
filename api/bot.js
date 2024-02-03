@@ -36,17 +36,25 @@ bot.command("start", (ctx) =>
 );
 
 // ON
-bot.on("Explain Medical Reports", (ctx) =>
-  ctx.reply("Upload a picture of the medical report", {
-    reply_markup: explainMedicalReportKeyboard,
-  })
-);
-
-bot.on("Go Back", (ctx) =>
-  ctx.reply("Welcome to Nursify, seek explanations or medication conditions", {
-    reply_markup: mainKeyboard,
-  })
-);
+bot.on("message:text", (ctx) => {
+  const text = ctx.msg.text;
+  if (text === "Explain Medical Reports") {
+    return ctx.reply("Upload a picture of the medical report", {
+      reply_markup: explainMedicalReportKeyboard,
+    });
+  } else if (text === "Explain Medication") {
+    return ctx.reply("Upload a picture of the medication", {
+      reply_markup: explainMedicalReportKeyboard,
+    });
+  } else if (text === "Go Back") {
+    return ctx.reply(
+      "Welcome to Nursify, seek explanations or medication conditions",
+      {
+        reply_markup: mainKeyboard,
+      }
+    );
+  }
+});
 
 bot.on("message:photo", (ctx) => ctx.reply("You sent a picture"), {
   reply_markup: mainKeyboard,
