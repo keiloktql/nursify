@@ -1,5 +1,5 @@
 import { Bot, webhookCallback } from "grammy";
-import { Commands, commands, CommandsFlavor } from "@grammyjs/commands";
+import { Commands, commands } from "@grammyjs/commands";
 import "dotenv/config";
 
 const token = process.env.BOT_TOKEN;
