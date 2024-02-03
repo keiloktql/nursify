@@ -61,8 +61,4 @@ bot.on("message:text", async (ctx) => {
   }
 });
 
-bot.on("message:photo", (ctx) => ctx.reply("You sent a picture"), {
-  reply_markup: mainKeyboard,
-});
-
 export default webhookCallback(bot, "http");

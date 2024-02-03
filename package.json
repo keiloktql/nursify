@@ -18,6 +18,7 @@
   },
   "homepage": "https://github.com/keiloktql/nursify#readme",
   "dependencies": {
+    "@grammyjs/conversations": "^1.2.0",
     "@grammyjs/menu": "^1.2.1",
     "dotenv": "^16.4.1",
     "grammy": "^1.20.3"
