@@ -16,15 +16,13 @@ const mainNenu = new Menu("main")
   .text("Explain medication", (ctx) => ctx.reply("You pressed B!"));
 bot.use(mainNenu);
 
-bot.command(
-  "start",
-  (ctx) =>
-    ctx.reply(
-      "Welcome to Nursify, would you like to explain condition, or explain "
-    ),
-  {
-    reply_markup: mainNenu,
-  }
+bot.command("start", (ctx) =>
+  ctx.reply(
+    "Welcome to Nursify, seek explanations or medication conditions via the buttons below!",
+    {
+      reply_markup: mainNenu,
+    }
+  )
 );
 
 export default webhookCallback(bot, "http");
