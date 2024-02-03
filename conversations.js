@@ -34,8 +34,11 @@ export async function explainMedicalReport(conversation, ctx) {
     { reply_markup: goBackKeyboard }
   );
 
+  // Pass user response to analyzeMedication function
+  const medicalReportAnalysis = await analyzeMedication(ctx.message.text);
+
   // Pass user response to analyzeMedicalReport function
-  await handleResponse(ctx, conversation, analyzeMedicalReport, userResponse);
+  await handleResponse(ctx, conversation, medicalReportAnalysis);
 }
 
 export async function explainMedication(conversation, ctx) {
@@ -43,8 +46,8 @@ export async function explainMedication(conversation, ctx) {
     reply_markup: goBackKeyboard,
   });
 
-  const analysis = await analyzeMedication(ctx.message.text);
-  await handleResponse(ctx, conversation, analysis);
+  // Send the analysis to the user
+  await handleResponse(ctx, conversation, analyzeMedication);
 }
 
 export async function manageReminders(conversation, ctx) {
