@@ -2,6 +2,7 @@ import { Bot, webhookCallback, Keyboard, session } from "grammy";
 import { Menu } from "@grammyjs/menu";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
+import { OCR } from "../backend";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
@@ -15,10 +16,26 @@ async function explainMedicalReports(conversation, ctx) {
   ctx.reply("Upload a picture of the medical report", {
     reply_markup: explainMedicalReportKeyboard,
   });
-  const test = await conversation.waitFor("message");
-  ctx.reply("thjank you", {
-    reply_markup: mainKeyboard,
-  });
+  const medicalReportCtx = await conversation.wait();
+
+  if (medicalReportCtx.message.photo) {
+    OCR();
+    ctx.reply("Thank you for uploading the medical report photo", {
+      reply_markup: mainKeyboard,
+    });
+  } else if (medicalReportCtx.message.text) {
+    // User entered text
+    ctx.reply("Thank you for explaining the medical report in text", {
+      reply_markup: mainKeyboard,
+    });
+  } else {
+    ctx.reply(
+      "Invalid response type. Please upload a photo or provide text explanation.",
+      {
+        reply_markup: mainKeyboard,
+      }
+    );
+  }
   return;
 }
 bot.use(createConversation(explainMedicalReports));
