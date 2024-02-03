@@ -26,7 +26,7 @@ bot.command("start", (ctx) =>
 bot.on("message:text", async (ctx) => {
   const text = ctx.msg.text;
   if (text === "Explain Medical Report") {
-    await ctx.conversation.enter("explainMedicalReports");
+    await ctx.conversation.enter("explainMedicalReport");
   } else if (text === "Explain Medication") {
     await ctx.conversation.enter("explainMedication");
   } else if (text === "Go back") {
