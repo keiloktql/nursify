@@ -20,6 +20,7 @@
   "dependencies": {
     "@grammyjs/conversations": "^1.2.0",
     "@grammyjs/menu": "^1.2.1",
+    "axios": "^1.6.7",
     "dotenv": "^16.4.1",
     "grammy": "^1.20.3",
     "node-tesseract-ocr": "^2.2.1",

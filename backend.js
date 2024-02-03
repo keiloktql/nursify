@@ -1,6 +1,6 @@
 import "dotenv/config";
 import OpenAI from "openai";
-import tesseract from "node-tesseract-ocr";
+import { createWorker } from "tesseract.js";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // This is the default and can be omitted
@@ -27,14 +27,14 @@ Note: This chatbot is designed to assist in understanding medical reports, but i
 
 export const OCR = async (photo) => {
   try {
-    const text = await tesseract.recognize(photo, {
-      lang: "eng",
-      oem: 1,
-      psm: 3,
-    });
-    console.log("Result:", text);
+    const worker = await createWorker("eng");
+    const ret = await worker.recognize(photo);
+    console.log(ret.data.text);
+    await worker.terminate();
+
+    return ret.data.text;
   } catch (error) {
-    console.log(error.message);
+    console.log("Err: ", error.message);
   }
 };
 
