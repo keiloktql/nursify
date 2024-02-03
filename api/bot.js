@@ -1,7 +1,7 @@
 import { Bot, webhookCallback, session } from "grammy";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
-import { explainMedicalReports } from "../conversations.js";
+import { explainMedicalReport } from "../conversations.js";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
@@ -11,7 +11,7 @@ bot.use(session({ initial: () => ({}) }));
 bot.use(conversations());
 
 // CONVERSATIONS
-bot.use(createConversation(explainMedicalReports));
+bot.use(createConversation(explainMedicalReport));
 
 // COMMANDS
 bot.command("start", (ctx) =>

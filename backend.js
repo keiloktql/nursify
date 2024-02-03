@@ -6,6 +6,6 @@ export const analyzeMedicalReport = (text) => {
   return "Analyzed medical report";
 };
 
-export const analyzeMedicalCondition = (text) => {
-  return "Analyzed medical condition";
+export const analyzeMedication = (text) => {
+  return "Analyzed medication";
 };
