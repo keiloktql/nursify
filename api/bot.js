@@ -7,7 +7,7 @@ import { BOT_TOKEN } from "../constants.js";
 
 if (!BOT_TOKEN) throw new Error("BOT_TOKEN is unset");
 
-const bot = new Bot(token);
+const bot = new Bot(BOT_TOKEN);
 bot.use(session({ initial: () => ({}) }));
 bot.use(conversations());
 
