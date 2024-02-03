@@ -1,7 +1,7 @@
 import { Bot, webhookCallback, session } from "grammy";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
-import { explainMedicalReport, explainMedication } from "../conversations.js";
+import { explainMedicalReport, explainMedication, manageReminders } from "../conversations.js";
 import { mainKeyboard } from "../keyboards.js";
 import { BOT_TOKEN } from "../constants.js";
 
@@ -14,6 +14,7 @@ bot.use(conversations());
 // CONVERSATIONS
 bot.use(createConversation(explainMedicalReport));
 bot.use(createConversation(explainMedication));
+bot.use(createConversation(manageReminders));
 
 // COMMANDS
 bot.command("start", (ctx) =>

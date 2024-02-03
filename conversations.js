@@ -44,5 +44,5 @@ export async function explainMedication(conversation, ctx) {
 }
 
 export async function manageReminders(conversation, ctx) {
-  ctx.reply("response", {});
+  ctx.reply("test test", { reply_markup: goBackKeyboard });
 }
