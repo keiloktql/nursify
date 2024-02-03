@@ -2,7 +2,7 @@ import { Bot, webhookCallback, Keyboard, session } from "grammy";
 import { Menu } from "@grammyjs/menu";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
-import { OCR } from "../backend";
+import { OCR } from "../backend.js";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
