@@ -125,3 +125,7 @@ export const analyzeMedication = async (text) => {
 
   return await chatGPTWrapper(medicationPromptTemplate);
 };
+
+export const enterReminder = async (hours, minutes) => {
+  return (`A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`)
+}

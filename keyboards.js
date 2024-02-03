@@ -9,6 +9,10 @@ export const mainKeyboard = new Keyboard()
   .row()
   .resized();
 export const goBackKeyboard = new Keyboard().text("Go back").row().resized();
+export const setReminderKeyboard = new Keyboard()
+  .text("Set new reminder")
+  .row()
+  .text("Go back");
 export const remindersKeyboard = new Keyboard()
   .text("View all reminders")
   .row()
