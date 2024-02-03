@@ -1,6 +1,5 @@
 import "dotenv/config";
 import axios from "axios";
-import sharp from "sharp";
 import OpenAI from "openai";
 import imageType from "image-type";
 import { createWorker } from "tesseract.js";
@@ -9,24 +8,51 @@ const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // This is the default and can be omitted
 });
 
-const promptTemplateInjector = (MEDICAL_REPORT_TEXT) => {
-  return `Medical Report:
-  
-${MEDICAL_REPORT_TEXT}
+const MEDICAL_REPORT_TEMPLATE = `Medical Report Template:
+Everything below the sentence, "Start of template:", is going to be a template response I want to send to the user.
 
-Additional Details (if available):
-- Any specific symptoms or concerns you'd like clarification on.
-- Medications or treatments mentioned in the report.
-- Previous medical history or conditions that might be relevant.
+In your role as a virtual medical advisor, your task is to meticulously analyze the provided medical report, assuming the role of the attending physician. Your responsibilities include delving into the report, decoding complex medical terminology, and offering in-depth insights. Walk the user through any critical findings, ensuring clarity through clear explanations, and suggesting actionable steps. Make sure to emphasize key recommendations and provide a nuanced understanding of the severity of identified issues to empower the user in addressing their health concerns. You are to address the user in a professional and empathetic manner, ensuring that they feel supported and informed throughout the process. As such, use words such as "you," "your," and "we" to create a sense of collaboration and understanding.
 
-User Expectations:
-- Please provide insights on critical findings.
-- Explain any medical terminology or jargon.
-- Highlight important recommendations or actions to be taken.
-- Clarify the severity of any identified issues.
+Our goal is to provide the user with a comprehensive understanding of their medical report, enabling them to make informed decisions about their health. As such, reduce the complexity of the medical report and offer actionable insights to guide the user through their health journey. This include medical jargon, test results, and any other relevant information. Make it clear that the chatbot is not a substitute for professional medical advice and that the user should consult a healthcare provider for personalized guidance. Also, make it short and concise, ensuring that the user can easily understand the information provided.
 
-Note: This chatbot is designed to assist in understanding medical reports, but it does not replace professional medical advice. Consult with your healthcare provider for personalized guidance.`;
-};
+The user has shared the following medical report:
+{MEDICAL_REPORT_TEXT}
+
+Start of template:
+
+🤔 **Insights and Guidance:**
+- Illuminate any critical findings for a better understanding.
+- Decode medical terminology to enhance clarity.
+- Emphasize crucial recommendations and suggest actionable steps.
+- Offer context on the severity of identified issues.
+
+⚠️ **Important Note:**
+This chatbot serves to aid in comprehending medical reports, but it does not replace professional medical advice. Always consult your healthcare provider for personalized guidance.
+
+Feel free to inquire if you have any questions or need further clarification!
+`;
+
+const MEDICATION_TEMPLATE = `Everything below the line, "^/^---^/^", is a template response I want to send to the user.
+
+As a virtual medical advisor, your role extends to providing guidance on prescribed medications. Delve into the details of the prescribed regimen, offering insights, clarifying medication terminology, and outlining crucial considerations. Empower the user to adhere to their medication plan effectively and understand the importance of each prescribed drug.
+
+The user has received the following medication prescription:
+{MEDICATION_PRESCRIPTION_TEXT}
+
+Start of template:
+^/^---^/^
+
+💊 **Medication Guidance:**
+- Clarify the purpose and function of each prescribed medication.
+- Explain any medical terminology related to the medications for better understanding.
+- Highlight important considerations, such as dosage instructions and potential side effects.
+- Emphasize the significance of adhering to the prescribed regimen.
+
+⚠️ **Important Note:**
+This chatbot serves to aid in understanding medication prescriptions but is not a substitute for professional medical advice. Consult with your healthcare provider for personalized guidance.
+
+Feel free to ask if you have any questions or need further explanation!
+`;
 
 export const loadPhoto = async (photoUrl) => {
   try {
@@ -61,14 +87,14 @@ export const OCR = async (photo) => {
 
 export const analyzeMedicalReport = async (text) => {
   // Add the medical report text to the prompt template
-  const prompt = promptTemplateInjector(text);
+  const prompt = MEDICAL_REPORT_TEMPLATE.replace("{MEDICAL_REPORT_TEXT}", text);
 
   // OpenAI API with chat completion
   try {
     const gptResponse = await openai.chat.completions.create({
       messages: [{ role: "user", content: prompt }],
       model: "gpt-3.5-turbo",
-      temperature: 0.5,
+      temperature: 0.1,
       frequency_penalty: 0,
       presence_penalty: 0,
     });
