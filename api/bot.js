@@ -1,7 +1,7 @@
 import { Bot, webhookCallback, session } from "grammy";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
-import { explainMedicalReport } from "../conversations.js";
+import { explainMedicalReport, explainMedication } from "../conversations.js";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
@@ -12,6 +12,7 @@ bot.use(conversations());
 
 // CONVERSATIONS
 bot.use(createConversation(explainMedicalReport));
+bot.use(createConversation(explainMedication));
 
 // COMMANDS
 bot.command("start", (ctx) =>
@@ -26,9 +27,7 @@ bot.on("message:text", async (ctx) => {
   if (text === "Explain Medical Reports") {
     await ctx.conversation.enter("explainMedicalReports");
   } else if (text === "Explain Medication") {
-    return ctx.reply("Upload a picture of the medication", {
-      reply_markup: explainMedicalReportKeyboard,
-    });
+    await ctx.conversation.enter("explainMedication");
   } else if (text === "Go back") {
     return ctx.reply(
       "Welcome to Nursify, seek explanations or medication conditions",

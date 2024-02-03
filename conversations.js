@@ -1,10 +1,10 @@
 import { OCR, analyzeMedicalReport, analyzeMedication } from "./backend.js";
-import { explainMedicalReportKeyboard, mainKeyboard } from "./keyboards.js";
+import { goBackKeyboard, mainKeyboard } from "./keyboards.js";
 
 // MEDICAL REPORTS
 export async function explainMedicalReport(conversation, ctx) {
   ctx.reply("Upload a picture of the medical report", {
-    reply_markup: explainMedicalReportKeyboard,
+    reply_markup: goBackKeyboard,
   });
   const medicalReportCtx = await conversation.wait();
 
@@ -32,18 +32,18 @@ export async function explainMedicalReport(conversation, ctx) {
 
 export async function explainMedication(conversation, ctx) {
   ctx.reply("Upload a picture of the medication", {
-    reply_markup: explainMedicalReportKeyboard,
+    reply_markup: goBackKeyboard,
   });
-  const medicalReportCtx = await conversation.wait();
+  const medicationCtx = await conversation.wait();
 
-  if (medicalReportCtx.message.photo) {
+  if (medicationCtx.message.photo) {
     const OCRText = OCR();
     const analysis = analyzeMedication(OCRText);
     ctx.reply(analysis, {
       reply_markup: mainKeyboard,
     });
-  } else if (medicalReportCtx.message.text) {
-    const analysis = analyzeMedication(medicalReportCtx.message.text);
+  } else if (medicationCtx.message.text) {
+    const analysis = analyzeMedication(medicationCtx.message.text);
     ctx.reply(analysis, {
       reply_markup: mainKeyboard,
     });
