@@ -43,7 +43,7 @@ export async function explainMedication(conversation, ctx) {
     reply_markup: goBackKeyboard,
   });
 
-  const analysis = await analyzeMedication();
+  const analysis = await analyzeMedication(ctx.message.text);
   await handleResponse(ctx, conversation, analysis);
 }
 
