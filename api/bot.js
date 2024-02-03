@@ -2,7 +2,7 @@ import { Bot, webhookCallback, Keyboard, session } from "grammy";
 import { Menu } from "@grammyjs/menu";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
-import { OCR } from "../backend.js";
+import { OCR, analyzeMedicalReport } from "../backend.js";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
@@ -19,13 +19,14 @@ async function explainMedicalReports(conversation, ctx) {
   const medicalReportCtx = await conversation.wait();
 
   if (medicalReportCtx.message.photo) {
-    OCR();
-    ctx.reply("Thank you for uploading the medical report photo", {
+    const OCRText = OCR();
+    const analysis = analyzeMedicalReport(OCRText);
+    ctx.reply(analysis, {
       reply_markup: mainKeyboard,
     });
   } else if (medicalReportCtx.message.text) {
-    // User entered text
-    ctx.reply("Thank you for explaining the medical report in text", {
+    const analysis = analyzeMedicalReport(medicalReportCtx.message.text);
+    ctx.reply(analysis, {
       reply_markup: mainKeyboard,
     });
   } else {

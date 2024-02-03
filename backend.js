@@ -1,3 +1,7 @@
 export const OCR = (photo) => {
-  return;
+  return "";
+};
+
+export const analyzeMedicalReport = (text) => {
+  return "Analyzed medical report";
 };
