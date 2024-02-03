@@ -20,6 +20,9 @@ The user has shared the following medical report:
 
 Start of template:
 
+🩺 ** Overall Medical Report Analysis:**
+- A one-sentence summary of the overall medical report.
+
 🤔 **Insights and Guidance:**
 - Illuminate any critical findings for a better understanding.
 - Decode medical terminology to enhance clarity.
