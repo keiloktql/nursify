@@ -1,20 +1,27 @@
-import { Bot, webhookCallback, Keyboard } from "grammy";
+import { Bot, webhookCallback, Keyboard, session } from "grammy";
 import { Menu } from "@grammyjs/menu";
+import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
 
 const bot = new Bot(token);
+bot.use(session({ initial: () => ({}) }));
+bot.use(conversations());
 
-// MENU
-const mainNenu = new Menu("main")
-  .text("Explain medical condition", (ctx) =>
-    ctx.reply("You pressed medical condition")
-  )
-  .row()
-  .text("Explain medication", (ctx) => ctx.reply("You pressed B!"));
-bot.use(mainNenu);
+// CONVERSATIONS
+async function explainMedicalReports(conversation, ctx) {
+  ctx.reply("Upload a picture of the medical report", {
+    reply_markup: explainMedicalReportKeyboard,
+  });
+  const test = await conversation.waitFor("message");
+  ctx.reply("thjank you", {
+    reply_markup: mainKeyboard,
+  });
+  return;
+}
+bot.use(createConversation(explainMedicalReports));
 
 // KEYBOARDS
 const mainKeyboard = new Keyboard()
@@ -36,17 +43,15 @@ bot.command("start", (ctx) =>
 );
 
 // ON
-bot.on("message:text", (ctx) => {
+bot.on("message:text", async (ctx) => {
   const text = ctx.msg.text;
   if (text === "Explain Medical Reports") {
-    return ctx.reply("Upload a picture of the medical report", {
-      reply_markup: explainMedicalReportKeyboard,
-    });
+    await ctx.conversation.enter("explainMedicalReports");
   } else if (text === "Explain Medication") {
     return ctx.reply("Upload a picture of the medication", {
       reply_markup: explainMedicalReportKeyboard,
     });
-  } else if (text === "Go Back") {
+  } else if (text === "Go back") {
     return ctx.reply(
       "Welcome to Nursify, seek explanations or medication conditions",
       {
