@@ -1,8 +1,7 @@
-import { Bot, webhookCallback, Keyboard, session } from "grammy";
-import { Menu } from "@grammyjs/menu";
+import { Bot, webhookCallback, session } from "grammy";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
-import { OCR, analyzeMedicalReport } from "../backend.js";
+import { explainMedicalReports } from "../conversations.js";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
@@ -12,46 +11,7 @@ bot.use(session({ initial: () => ({}) }));
 bot.use(conversations());
 
 // CONVERSATIONS
-async function explainMedicalReports(conversation, ctx) {
-  ctx.reply("Upload a picture of the medical report", {
-    reply_markup: explainMedicalReportKeyboard,
-  });
-  const medicalReportCtx = await conversation.wait();
-
-  if (medicalReportCtx.message.photo) {
-    const OCRText = OCR();
-    const analysis = analyzeMedicalReport(OCRText);
-    ctx.reply(analysis, {
-      reply_markup: mainKeyboard,
-    });
-  } else if (medicalReportCtx.message.text) {
-    const analysis = analyzeMedicalReport(medicalReportCtx.message.text);
-    ctx.reply(analysis, {
-      reply_markup: mainKeyboard,
-    });
-  } else {
-    ctx.reply(
-      "Invalid response type. Please upload a photo or provide text explanation.",
-      {
-        reply_markup: mainKeyboard,
-      }
-    );
-  }
-  return;
-}
 bot.use(createConversation(explainMedicalReports));
-
-// KEYBOARDS
-const mainKeyboard = new Keyboard()
-  .text("Explain Medical Reports")
-  .row()
-  .text("Explain Medication")
-  .row()
-  .resized();
-const explainMedicalReportKeyboard = new Keyboard()
-  .text("Go back")
-  .row()
-  .resized();
 
 // COMMANDS
 bot.command("start", (ctx) =>
