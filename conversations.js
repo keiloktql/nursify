@@ -1,15 +1,17 @@
 import { OCR, analyzeMedicalReport, analyzeMedication } from "./backend.js";
 import { goBackKeyboard, mainKeyboard } from "./keyboards.js";
 
-async function handleResponse(ctx, analyzeFunction) {
-  const responseMessage = ctx.message.text || "";
-  const isPhotoUploaded = ctx.message.photo !== undefined;
+async function handleResponse(ctx, conversation, analyzeFunction) {
+  const conversationCtx = await conversation.wait();
+  const responseMessage = conversationCtx.message.text || "";
+  const isPhotoUploaded = conversationCtx.message.photo !== undefined;
 
   if (!(isPhotoUploaded || responseMessage)) {
     ctx.reply(
       "Invalid response type. Please upload a photo or provide text explanation.",
       { reply_markup: mainKeyboard }
     );
+    return;
   }
 
   if (isPhotoUploaded) {
@@ -31,14 +33,16 @@ export async function explainMedicalReport(conversation, ctx) {
     "Upload a picture of the medical report or send a message of the medical condition",
     { reply_markup: goBackKeyboard }
   );
-  const medicalReportCtx = await conversation.wait();
-  await handleResponse(ctx, analyzeMedicalReport);
+  await handleResponse(ctx, conversation, analyzeMedicalReport);
 }
 
 export async function explainMedication(conversation, ctx) {
   ctx.reply("Upload a picture or send the name of the medication", {
     reply_markup: goBackKeyboard,
   });
-  const medicationCtx = await conversation.wait();
-  await handleResponse(ctx, analyzeMedication);
+  await handleResponse(ctx, conversation, analyzeMedication);
+}
+
+export async function manageReminders(conversation, ctx) {
+  ctx.reply("response", {});
 }

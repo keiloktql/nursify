@@ -3,9 +3,9 @@ import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
 import { explainMedicalReport, explainMedication } from "../conversations.js";
 import { mainKeyboard } from "../keyboards.js";
+import { BOT_TOKEN } from "../constants.js";
 
-const token = process.env.BOT_TOKEN;
-if (!token) throw new Error("BOT_TOKEN is unset");
+if (!BOT_TOKEN) throw new Error("BOT_TOKEN is unset");
 
 const bot = new Bot(token);
 bot.use(session({ initial: () => ({}) }));
@@ -25,13 +25,18 @@ bot.command("start", (ctx) =>
 // ON
 bot.on("message:text", async (ctx) => {
   const text = ctx.msg.text;
-  if (text === "Explain Medical Report") {
+  if (text === "Explain Medical Report 🧑‍🔬") {
     await ctx.conversation.enter("explainMedicalReport");
     return;
   }
 
-  if (text === "Explain Medication") {
+  if (text === "Explain Medication 💊") {
     await ctx.conversation.enter("explainMedication");
+    return;
+  }
+
+  if (text === "Manage Reminders ⏰") {
+    await ctx.conversation.enter("manageReminders");
     return;
   }
 
