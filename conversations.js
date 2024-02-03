@@ -28,23 +28,11 @@ async function handleResponse(ctx, conversation, analyzeFunction) {
   }
 }
 
-// Define a function to wait for user response
-const waitForUserResponse = () => {
-  return new Promise((resolve) => {
-    conversation.on("text", (ctx) => {
-      resolve(ctx.message.text);
-    });
-  });
-};
-
 export async function explainMedicalReport(conversation, ctx) {
   ctx.reply(
     "Upload a picture of the medical report or send a message of the medical condition",
     { reply_markup: goBackKeyboard }
   );
-
-  // Wait for user response
-  const userResponse = await waitForUserResponse();
 
   // Pass user response to analyzeMedicalReport function
   await handleResponse(ctx, conversation, analyzeMedicalReport, userResponse);
