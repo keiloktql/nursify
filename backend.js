@@ -1,3 +1,4 @@
+import "dotenv/config";
 import OpenAI from "openai";
 import tesseract from "node-tesseract-ocr";
 
@@ -43,13 +44,12 @@ export const analyzeMedicalReport = async (text) => {
 
   // OpenAI API with chat completion
   try {
-    const gptResponse = await openai.complete({
-      engine: "gpt-3.5-turbo",
-      prompt,
-      maxTokens: 150,
-      temperature: 0.1,
-      presence_penalty: 0.1,
-      frequency_penalty: 0.1,
+    const gptResponse = await openai.chat.completions.create({
+      messages: [{ role: "user", content: prompt }],
+      model: "gpt-3.5-turbo",
+      temperature: 0.5,
+      frequency_penalty: 0,
+      presence_penalty: 0,
     });
 
     return gptResponse.data.choices[0].text.trim();
