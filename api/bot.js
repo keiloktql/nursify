@@ -27,9 +27,15 @@ bot.on("message:text", async (ctx) => {
   const text = ctx.msg.text;
   if (text === "Explain Medical Report") {
     await ctx.conversation.enter("explainMedicalReport");
-  } else if (text === "Explain Medication") {
+    return;
+  }
+
+  if (text === "Explain Medication") {
     await ctx.conversation.enter("explainMedication");
-  } else if (text === "Go back") {
+    return;
+  }
+
+  if (text === "Go back") {
     return ctx.reply(
       "Welcome to Nursify, seek explanations or medication conditions",
       {
