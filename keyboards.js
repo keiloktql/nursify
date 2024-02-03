@@ -1,3 +1,5 @@
+import { Keyboard } from "grammy";
+
 export const mainKeyboard = new Keyboard()
   .text("Explain Medical Reports")
   .row()
