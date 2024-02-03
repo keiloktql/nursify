@@ -1,5 +1,8 @@
 import "dotenv/config";
+import axios from "axios";
+import sharp from "sharp";
 import OpenAI from "openai";
+import imageType from "image-type";
 import { createWorker } from "tesseract.js";
 
 const openai = new OpenAI({
@@ -25,16 +28,34 @@ User Expectations:
 Note: This chatbot is designed to assist in understanding medical reports, but it does not replace professional medical advice. Consult with your healthcare provider for personalized guidance.`;
 };
 
+export const loadPhoto = async (photoUrl) => {
+  try {
+    // Fetch image data
+    const response = await axios.get(photoUrl, { responseType: "arraybuffer" });
+
+    if (!response.data) {
+      throw new Error("Empty response or invalid image data");
+    }
+
+    // Return the raw image data
+    return response.data;
+  } catch (error) {
+    console.error("Error loading photo: ", error.message);
+    throw error;
+  }
+};
+
 export const OCR = async (photo) => {
   try {
     const worker = await createWorker("eng");
+
     const ret = await worker.recognize(photo);
     console.log(ret.data.text);
     await worker.terminate();
 
     return ret.data.text;
   } catch (error) {
-    console.log("Err: ", error.message);
+    console.log("Err: ", error);
   }
 };
 
