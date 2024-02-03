@@ -3,6 +3,7 @@ import axios from "axios";
 import OpenAI from "openai";
 import imageType from "image-type";
 import { createWorker } from "tesseract.js";
+import supabase from "./supabaseClient";
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY, // This is the default and can be omitted
@@ -127,5 +128,12 @@ export const analyzeMedication = async (text) => {
 };
 
 export const enterReminder = async (hours, minutes) => {
-  return (`A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`)
+  const { error } = await supabase
+  .from('reminder')
+  .insert({ user_id: 'qwe123qwe123', reminder_name: 'AntiCancer', reminder_cron: `${minutes} ${hours} * * *` })
+  if (!error) {
+    return (`A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`)
+  } else {
+    return ("An error has occured :(")
+  }
 }
