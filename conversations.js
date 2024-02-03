@@ -42,7 +42,9 @@ export async function explainMedication(conversation, ctx) {
   ctx.reply("Upload a picture or send the name of the medication", {
     reply_markup: goBackKeyboard,
   });
-  await handleResponse(ctx, conversation, analyzeMedication);
+
+  const analysis = await analyzeMedication();
+  await handleResponse(ctx, conversation, analysis);
 }
 
 export async function manageReminders(conversation, ctx) {
