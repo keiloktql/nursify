@@ -1,7 +1,7 @@
 import { Keyboard } from "grammy";
 
 export const mainKeyboard = new Keyboard()
-  .text("Explain Medical Reports")
+  .text("Explain Medical Report")
   .row()
   .text("Explain Medication")
   .row()

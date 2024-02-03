@@ -2,6 +2,7 @@ import { Bot, webhookCallback, session } from "grammy";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
 import { explainMedicalReport, explainMedication } from "../conversations.js";
+import { mainKeyboard } from "../keyboards.js";
 
 const token = process.env.BOT_TOKEN;
 if (!token) throw new Error("BOT_TOKEN is unset");
@@ -24,7 +25,7 @@ bot.command("start", (ctx) =>
 // ON
 bot.on("message:text", async (ctx) => {
   const text = ctx.msg.text;
-  if (text === "Explain Medical Reports") {
+  if (text === "Explain Medical Report") {
     await ctx.conversation.enter("explainMedicalReports");
   } else if (text === "Explain Medication") {
     await ctx.conversation.enter("explainMedication");

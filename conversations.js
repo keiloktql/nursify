@@ -3,9 +3,12 @@ import { goBackKeyboard, mainKeyboard } from "./keyboards.js";
 
 // MEDICAL REPORTS
 export async function explainMedicalReport(conversation, ctx) {
-  ctx.reply("Upload a picture of the medical report", {
-    reply_markup: goBackKeyboard,
-  });
+  ctx.reply(
+    "Upload a picture of the medical report or send a message of the medical condition",
+    {
+      reply_markup: goBackKeyboard,
+    }
+  );
   const medicalReportCtx = await conversation.wait();
 
   if (medicalReportCtx.message.photo) {
@@ -31,7 +34,7 @@ export async function explainMedicalReport(conversation, ctx) {
 }
 
 export async function explainMedication(conversation, ctx) {
-  ctx.reply("Upload a picture of the medication", {
+  ctx.reply("Upload a picture or send the name of the medication", {
     reply_markup: goBackKeyboard,
   });
   const medicationCtx = await conversation.wait();
