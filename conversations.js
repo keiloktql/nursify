@@ -16,13 +16,13 @@ async function handleResponse(ctx, conversation, analyzeFunction) {
 
   if (isPhotoUploaded) {
     const OCRText = OCR();
-    const analysis = analyzeFunction(OCRText);
+    const analysis = await analyzeFunction(OCRText);
     ctx.reply(analysis, { reply_markup: mainKeyboard });
     return;
   }
 
   if (responseMessage) {
-    const analysis = analyzeFunction(responseMessage);
+    const analysis = await analyzeFunction(responseMessage);
     ctx.reply(analysis, { reply_markup: mainKeyboard });
     return;
   }
