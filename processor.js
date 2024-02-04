@@ -65,7 +65,7 @@ This chatbot serves to aid in understanding medication prescriptions but is not 
 Feel free to ask if you have any questions or need further explanation!
 `;
 
-const chatGPTWrapper = async (prompt) => {
+export const chatGPTWrapper = async (prompt, initial) => {
     // OpenAI API with chat completion
     try {
         const gptResponse = await openai.chat.completions.create({
@@ -77,6 +77,7 @@ const chatGPTWrapper = async (prompt) => {
         });
 
         return {
+            initial: initial,
             prompt: prompt,
             response: gptResponse.choices[0].message.content
         };
@@ -126,7 +127,7 @@ export const analyzeMedicalReport = async (text) => {
         text
     );
 
-    return await chatGPTWrapper(medicalReportPromptTemplate);
+    return await chatGPTWrapper(medicalReportPromptTemplate, text);
 };
 
 export const analyzeMedication = async (text) => {
@@ -137,7 +138,7 @@ export const analyzeMedication = async (text) => {
 
     console.log(medicationPromptTemplate);
 
-    return await chatGPTWrapper(medicationPromptTemplate);
+    return await chatGPTWrapper(medicationPromptTemplate, text);
 };
 
 export const enterReminder = async (hours, minutes) => {

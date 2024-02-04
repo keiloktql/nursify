@@ -31,5 +31,8 @@
     "nodemon": "^3.0.3",
     "openai": "^4.26.0",
     "tesseract.js": "^5.0.4"
+  },
+  "devDependencies": {
+    "@grammyjs/types": "^3.4.6"
   }
 }

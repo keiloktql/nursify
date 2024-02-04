@@ -40,7 +40,7 @@ bot.use(createConversation(setReminders));
 
 // COMMANDS
 bot.command("start", async (ctx) => {
-    userData = await authenticateUser();
+    let userData = await authenticateUser();
     if (userData.language) {
         ctx.reply(
             "👩‍⚕️: Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.",

@@ -4,6 +4,7 @@ import {
     OCR,
     analyzeMedicalReport,
     analyzeMedication,
+    chatGPTWrapper,
     enterReminder,
     getReminder
 } from "./processor.js";
@@ -45,7 +46,7 @@ async function processPhotoResponse(ctx, conversationCtx, analyzeFunction) {
 
     ctx.reply(
         "👩‍⚕️: Processing your image! Standby... it might take a little longer!",
-        { reply_markup: mainKeyboard }
+        { reply_markup: goBackKeyboard }
     );
 
     const OCRText = await OCR(photo.data);
@@ -54,7 +55,7 @@ async function processPhotoResponse(ctx, conversationCtx, analyzeFunction) {
 
 async function processTextResponse(ctx, responseMessage, analyzeFunction) {
     ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
-        reply_markup: mainKeyboard
+        reply_markup: goBackKeyboard
     });
     return await analyzeFunction(responseMessage);
 }
@@ -94,8 +95,44 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         switch (requestType) {
             case RequestType.REPORT:
                 ctx.reply(("👩‍⚕️: ", analysis.response), {
-                    reply_markup: mainKeyboard
+                    reply_markup: goBackKeyboard
                 });
+
+                let continueConversation = true;
+                while (continueConversation) {
+                    // Get the next response from the user
+                    let userResponse = await conversation.wait();
+                    let nextResponse = userResponse.message.text || "";
+                    if (nextResponse === "Go back") {
+                        continueConversation = false;
+                        handleGoBack(ctx);
+                        return;
+                    }
+
+                    ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
+                        reply_markup: goBackKeyboard
+                    });
+                    console.log(">>>");
+                    console.log(conversationCtx);
+                    console.log(">>>");
+                    console.log("<<<");
+                    console.log(responseMessage);
+                    console.log("<<<");
+                    console.log("---");
+                    console.log(analysis.response);
+                    console.log("---");
+                    let conversationResponse = await chatGPTWrapper(
+                        "This is what the user initially shared: " +
+                            responseMessage +
+                            "This is the response that was generated: " +
+                            analysis.response +
+                            "This is what the user have asked based on the response " +
+                            nextResponse
+                    );
+                    ctx.reply(("👩‍⚕️: ", conversationResponse.response), {
+                        reply_markup: goBackKeyboard
+                    });
+                }
                 return;
             case RequestType.MEDICATION:
                 ctx.reply(("👩‍⚕️: ", analysis.response), {
