@@ -24,7 +24,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
 
         if (responseMessage === "Go back") {
             ctx.reply(
-                "Welcome to Nursify, seek explanations or medication conditions",
+                "👩‍⚕️: Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.",
                 {
                     reply_markup: mainKeyboard
                 }
