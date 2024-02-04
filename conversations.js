@@ -22,6 +22,16 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         const responseMessage = conversationCtx.message.text || "";
         const isPhotoUploaded = responsePhoto !== undefined;
 
+        if (responseMessage === "Go back") {
+            ctx.reply(
+                "Welcome to Nursify, seek explanations or medication conditions",
+                {
+                    reply_markup: mainKeyboard
+                }
+            );
+            return;
+        }
+
         if (!(isPhotoUploaded || responseMessage)) {
             ctx.reply(
                 "Invalid response type. Please upload a photo or provide text explanation.",
