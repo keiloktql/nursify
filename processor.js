@@ -75,7 +75,10 @@ const chatGPTWrapper = async (prompt) => {
             presence_penalty: 0
         });
 
-        return gptResponse.choices[0].message.content;
+        return {
+            prompt: prompt,
+            response: gptResponse.choices[0].message.content
+        };
     } catch (error) {
         LOG(chalk.red("Error in OpenAI API:", error.message));
         // Handle the error as per your application's requirements

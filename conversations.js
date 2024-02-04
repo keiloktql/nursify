@@ -92,10 +92,12 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
 
         switch (requestType) {
             case "report":
-                ctx.reply(("👩‍⚕️: ", analysis), { reply_markup: mainKeyboard });
+                ctx.reply(("👩‍⚕️: ", analysis.response), {
+                    reply_markup: mainKeyboard
+                });
                 return;
             case "medication":
-                ctx.reply(("👩‍⚕️: ", analysis), {
+                ctx.reply(("👩‍⚕️: ", analysis.response), {
                     reply_markup: setReminderKeyboard
                 });
                 return;
