@@ -49,6 +49,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         const responsePhoto = conversationCtx.message.photo;
         const responseMessage = conversationCtx.message.text || "";
         const isPhotoUploaded = responsePhoto !== undefined;
+        let OCRText = "";
 
         if (responseMessage === "Go back") {
             handleGoBack(ctx);
@@ -74,7 +75,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
                 { reply_markup: goBackKeyboard }
             );
 
-            const OCRText = await OCR(photo.data);
+            OCRText = await OCR(photo.data);
             analysis = await analyzeFunction(OCRText);
         } else {
             analysis = await processTextResponse(
@@ -105,6 +106,14 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
                     ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
                         reply_markup: goBackKeyboard
                     });
+                    console.log(
+                        "This is what the user initially shared: " +
+                            initialResponse +
+                            "This is the response that was generated: " +
+                            analysis.response +
+                            "This is what the user have asked based on the response " +
+                            nextResponse
+                    );
                     let conversationResponse = await chatGPTWrapper(
                         "This is what the user initially shared: " +
                             initialResponse +
