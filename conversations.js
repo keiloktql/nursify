@@ -49,7 +49,6 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         const responsePhoto = conversationCtx.message.photo;
         const responseMessage = conversationCtx.message.text || "";
         const isPhotoUploaded = responsePhoto !== undefined;
-        let OCRText = "";
 
         if (responseMessage === "Go back") {
             handleGoBack(ctx);
@@ -62,6 +61,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         }
 
         let analysis = "";
+        let OCRText = "";
         if (isPhotoUploaded) {
             const file = await conversationCtx.getFile();
             const path = file.file_path;
@@ -106,20 +106,12 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
                     ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
                         reply_markup: goBackKeyboard
                     });
-                    console.log(
-                        "This is what the user initially shared: " +
-                            initialResponse +
-                            "This is the response that was generated: " +
-                            analysis.response +
-                            "This is what the user have asked based on the response " +
-                            nextResponse
-                    );
                     let conversationResponse = await chatGPTWrapper(
                         "This is what the user initially shared: " +
                             initialResponse +
-                            "This is the response that was generated: " +
+                            "This is the response that was generated based on what the user shared: " +
                             analysis.response +
-                            "This is what the user have asked based on the response " +
+                            "This is what the user have asked based on the generated response" +
                             nextResponse
                     );
                     ctx.reply(("👩‍⚕️: ", conversationResponse.response), {
