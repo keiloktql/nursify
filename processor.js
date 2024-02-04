@@ -130,7 +130,7 @@ export const analyzeMedication = async (text) => {
         text
     );
 
-    console.log(medicationPromptTemplate)
+    console.log(medicationPromptTemplate);
 
     return await chatGPTWrapper(medicationPromptTemplate);
 };

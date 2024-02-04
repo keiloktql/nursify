@@ -48,7 +48,6 @@ async function processPhotoResponse(ctx, conversationCtx, analyzeFunction) {
     );
 
     const OCRText = await OCR(photo.data);
-    console.log("++++++", OCRText)
     return await analyzeFunction(OCRText);
 }
 
@@ -152,7 +151,7 @@ async function fetchReminders(ctx, conversation) {
         data.map((reminder) => {
             const cronArray = reminder.reminder_cron.split(" ");
             ctx.reply(
-                `👩‍⚕️: Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
+                `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
             );
         });
         return;
