@@ -158,7 +158,7 @@ async function fetchReminders(ctx, conversation) {
         });
         return;
     } else {
-        ctx.reply(message, { reply_markup: goBackKeyboard });
+        ctx.reply(message, { reply_markup: setReminderKeyboard });
         return;
     }
 }
