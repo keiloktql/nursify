@@ -3,7 +3,8 @@ import axios from "axios";
 import OpenAI from "openai";
 import { createWorker } from "tesseract.js";
 import supabase from "./supabaseClient.js";
-import { BOT_TOKEN, LOG } from "./constants.js";
+import { LOG } from "./common/functions.js";
+import { BOT_TOKEN } from "./constants.js";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY // This is the default and can be omitted
