@@ -138,6 +138,6 @@ export const enterReminder = async (hours, minutes) => {
     if (!error) {
         return `A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`;
     } else {
-        return "An error has occured :(";
+        return error.message;
     }
 };
