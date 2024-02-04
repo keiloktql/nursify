@@ -97,14 +97,14 @@ async function handleReminder(ctx, conversation) {
 
 async function fetchReminders(ctx, conversation) {
     const { message, data } = await getReminder();
-    
+
     if (data !== null) {
         ctx.reply("These are your current reminders:", {
             reply_markup: goBackKeyboard
         });
         data.map((reminder) => {
             const cronArray = reminder.reminder_cron.split("");
-            return ctx.reply(
+            ctx.reply(
                 `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
             );
         });
