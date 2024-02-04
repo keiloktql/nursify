@@ -148,7 +148,7 @@ async function fetchReminders(ctx, conversation) {
 
     if (data !== null) {
         ctx.reply("👩‍⚕️: These are your current reminders:", {
-            reply_markup: goBackKeyboard
+            reply_markup: setReminderKeyboard
         });
         data.map((reminder) => {
             const cronArray = reminder.reminder_cron.split(" ");
