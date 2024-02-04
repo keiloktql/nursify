@@ -75,7 +75,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
             );
 
             const OCRText = await OCR(photo.data);
-            return await analyzeFunction(OCRText);
+            await analyzeFunction(OCRText);
         } else {
             analysis = await processTextResponse(
                 ctx,
