@@ -133,7 +133,7 @@ export const enterReminder = async (hours, minutes) => {
     const { error } = await supabase.from("reminder").insert({
         user_id: "qwe123qwe123",
         reminder_name: "AntiCancer",
-        reminder_cron: `${minutes} ${hours} * * *`
+        reminder_cron: `${parseInt(minutes, 10)} ${parseInt(hours, 10)} * * *`
     });
     if (!error) {
         return `A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`;
