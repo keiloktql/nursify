@@ -9,6 +9,7 @@ import {
     mainKeyboard,
     setReminderKeyboard
 } from "./keyboards.js";
+import { isStringOnlyNumbers } from "./common/functions.js";
 
 async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
     const conversationCtx = await conversation.wait();
@@ -59,7 +60,7 @@ async function handleReminder(ctx, conversation) {
 
     if (responseMessage) {
         const timing = [...responseMessage];
-        if (timing.length === 4 && containsOnlyNumbers(timing)) {
+        if (timing.length === 4 && isStringOnlyNumbers(timing)) {
             const hours = array.slice(0, 2).join("");
             const minutes = array.slice(-2).join("");
             if (hours < 24 && minutes < 60) {
