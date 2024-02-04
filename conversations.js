@@ -15,8 +15,9 @@ import { isArrayOnlyNumbers } from "./common/functions.js";
 async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
     try {
         const conversationCtx = await conversation.wait();
+        const responsePhoto = conversationCtx.message.photo;
         const responseMessage = conversationCtx.message.text || "";
-        const isPhotoUploaded = conversationCtx.message.photo !== undefined;
+        const isPhotoUploaded = responsePhoto !== undefined;
 
         if (!(isPhotoUploaded || responseMessage)) {
             ctx.reply(
@@ -27,14 +28,10 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         }
 
         let analysis = "";
-
         if (isPhotoUploaded) {
-            const photo = conversationCtx.message.photo;
-            const OCRText = OCR(photo);
+            const OCRText = OCR(responsePhoto);
             analysis = await analyzeFunction(OCRText);
-        }
-
-        if (responseMessage) {
+        } else {
             analysis = await analyzeFunction(responseMessage);
         }
 
