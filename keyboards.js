@@ -18,3 +18,8 @@ export const remindersKeyboard = new Keyboard()
     .text("View all reminders")
     .row()
     .text("Set reminders");
+export const chooseLanguageKeyboard = new Keyboard()
+    .text("English 🇬🇧")
+    .text("Chinese 🇨🇳")
+    .text("Malay 🇲🇾")
+    .text("Tamil 🇮🇳")

@@ -14,6 +14,7 @@ import {
 } from "./conversations.js";
 import { mainKeyboard } from "./keyboards.js";
 import { LOG } from "./common/functions.js";
+import { authenticateUser, createUser } from "./processor.js";
 
 const app = express();
 
@@ -38,14 +39,22 @@ bot.use(createConversation(manageReminders));
 bot.use(createConversation(setReminders));
 
 // COMMANDS
-bot.command("start", (ctx) =>
-    ctx.reply(
-        "👩‍⚕️: Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.",
-        {
-            reply_markup: mainKeyboard
-        }
-    )
-);
+bot.command("start", async (ctx) => {
+    userData = await authenticateUser();
+    if (userData.language) {
+        ctx.reply(
+            "👩‍⚕️: Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.",
+            {
+                reply_markup: mainKeyboard
+            }
+        );
+    } else {
+        ctx.reply(
+            "👩‍⚕️: Welcome to Nursify! Before we start, please choose your prefered language",
+            { reply_markup: chooseLanguageKeyboard }
+        );
+    }
+});
 
 // ON
 bot.on("message:text", async (ctx) => {
@@ -68,6 +77,75 @@ bot.on("message:text", async (ctx) => {
     if (text === "Set new reminder") {
         await ctx.conversation.enter("setReminders");
         return;
+    }
+
+    if (text === "English 🇬🇧") {
+        async function newUser() {
+            return await createUser("ENGLISH");
+        }
+        const response = newUser();
+
+        if (response) {
+            return ctx.reply(response, {
+                reply_markup: mainKeyboard
+            });
+        } else {
+            return ctx.reply("Something went wrong :(", {
+                reply_markup: mainKeyboard
+            });
+        }
+    }
+
+    if (text === "Chinese 🇨🇳") {
+        async function newUser() {
+            return await createUser();
+        }
+        const response = newUser("CHINESE");
+
+        if (response) {
+            return ctx.reply(response, {
+                reply_markup: mainKeyboard
+            });
+        } else {
+            return ctx.reply("Something went wrong :(", {
+                reply_markup: mainKeyboard
+            });
+        }
+    }
+
+    if (text === "Malay 🇲🇾") {
+        async function newUser() {
+            return await createUser();
+        }
+        const response = newUser("MALAY");
+
+        if (response) {
+            return ctx.reply(response, {
+                reply_markup: mainKeyboard
+            });
+        } else {
+            return ctx.reply("Something went wrong :(", {
+                reply_markup: mainKeyboard
+            });
+        }
+    }
+
+    if (text === "Tamil 🇮🇳") {
+        async function newUser() {
+            return await createUser("TAMIL");
+        }
+
+        const response = newUser();
+
+        if (response) {
+            return ctx.reply(response, {
+                reply_markup: mainKeyboard
+            });
+        } else {
+            return ctx.reply("Something went wrong :(", {
+                reply_markup: mainKeyboard
+            });
+        }
     }
 
     if (text === "Go back") {

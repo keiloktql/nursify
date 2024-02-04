@@ -3,7 +3,7 @@ import axios from "axios";
 import OpenAI from "openai";
 import { createWorker } from "tesseract.js";
 import supabase from "./supabaseClient.js";
-import { LOG } from "./common/functions.js";
+import { BOT_TOKEN, LOG } from "./constants.js";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY // This is the default and can be omitted
@@ -162,5 +162,63 @@ export const getReminder = async () => {
         return { message: `These are your reminders:`, data };
     } else {
         return { message: error.message, data };
+    }
+};
+
+export const authenticateUser = async () => {
+    async function getTelegramUserId() {
+        try {
+            const response = await fetch(
+                `https://api.telegram.org/bot${BOT_TOKEN}/getMe`
+            );
+            const data = await response.json();
+            const botId = data.result.id;
+            return botId;
+        } catch (error) {
+            return null;
+        }
+    }
+
+    async function checkRowExists(telegramid) {
+        try {
+            const { data, error } = await supabase
+                .from("users")
+                .select("*")
+                .eq("id", telegramid);
+
+            if (error) {
+                console.error("Error fetching data:", error.message);
+                return null;
+            }
+
+            if (data.length > 0) {
+                return data.language;
+            } else {
+                return null;
+            }
+        } catch (error) {
+            console.error("Error checking row existence:", error.message);
+            return null;
+        }
+    }
+
+    const telegramid = await getTelegramUserId();
+    const language = await checkRowExists(telegramid);
+    if (userData) {
+        return { id: telegramid, language: language };
+    } else {
+        return { id: telegramid, language: null };
+    }
+};
+
+export const createUser = async (chosenLanguage) => {
+    const { error } = await supabase.from("reminder").insert({
+        user_id: "qwe123qwe123",
+        language: chosenLanguage
+    });
+    if (!error) {
+        return `👩‍⚕️: You have selected ${chosenLanguage.toLowerCase()}, Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.`;
+    } else {
+        return null;
     }
 };
