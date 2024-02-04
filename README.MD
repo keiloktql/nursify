@@ -45,5 +45,3 @@ Welcome to Nursify, your personal health assistant on Telegram! Nursify is a Tel
 -   Derrick Lim (Database Engineer/Backend Engineer) - [LinkedIn](https://www.linkedin.com/in/derrick-lim-1986b0206/)
 
 -   Tan Yu Hoe (AI Engineer/Researcher) - [LinkedIn](https://www.linkedin.com/in/yu-hoe-tan/)
-
-Project Link: [https://github.com/keiloktql/LifeHack2023-EcoCart](https://github.com/keiloktql/LifeHack2023-EcoCart)
