@@ -36,23 +36,6 @@ function handleInvalidResponse(ctx) {
     );
 }
 
-async function processPhotoResponse(ctx, conversationCtx, analyzeFunction) {
-    const file = await conversationCtx.getFile();
-    const path = file.file_path;
-    const photo = await axios.get(
-        `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`,
-        { responseType: "arraybuffer" }
-    );
-
-    ctx.reply(
-        "👩‍⚕️: Processing your image! Standby... it might take a little longer!",
-        { reply_markup: goBackKeyboard }
-    );
-
-    const OCRText = await OCR(photo.data);
-    return await analyzeFunction(OCRText);
-}
-
 async function processTextResponse(ctx, responseMessage, analyzeFunction) {
     ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
         reply_markup: goBackKeyboard
@@ -79,11 +62,20 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
 
         let analysis = "";
         if (isPhotoUploaded) {
-            analysis = await processPhotoResponse(
-                ctx,
-                conversationCtx,
-                analyzeFunction
+            const file = await conversationCtx.getFile();
+            const path = file.file_path;
+            const photo = await axios.get(
+                `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`,
+                { responseType: "arraybuffer" }
             );
+
+            ctx.reply(
+                "👩‍⚕️: Processing your image! Standby... it might take a little longer!",
+                { reply_markup: goBackKeyboard }
+            );
+
+            const OCRText = await OCR(photo.data);
+            return await analyzeFunction(OCRText);
         } else {
             analysis = await processTextResponse(
                 ctx,
@@ -109,21 +101,13 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
                         return;
                     }
 
+                    let initialResponse = OCRText || responseMessage;
                     ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
                         reply_markup: goBackKeyboard
                     });
-                    console.log(">>>");
-                    console.log(conversationCtx);
-                    console.log(">>>");
-                    console.log("<<<");
-                    console.log(responseMessage);
-                    console.log("<<<");
-                    console.log("---");
-                    console.log(analysis.response);
-                    console.log("---");
                     let conversationResponse = await chatGPTWrapper(
                         "This is what the user initially shared: " +
-                            responseMessage +
+                            initialResponse +
                             "This is the response that was generated: " +
                             analysis.response +
                             "This is what the user have asked based on the response " +
