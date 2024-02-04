@@ -96,19 +96,28 @@ async function handleReminder(ctx, conversation) {
 }
 
 async function fetchReminders(ctx, conversation) {
-    const { message, data } = await getReminder();
-    if (data) {
-        ctx.reply("These are your current reminders:" , { reply_markup: goBackKeyboard });
-        data.map((reminder) => {
-            const cronArray = reminder.reminder_cron.split("");
-            return ctx.reply(
-                `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
-            );
+    try {
+        const { message, data } = await getReminder();
+        console.log(data)
+        if (data !== null) {
+            ctx.reply("These are your current reminders:", {
+                reply_markup: goBackKeyboard
+            });
+            data.map((reminder) => {
+                const cronArray = reminder.reminder_cron.split("");
+                return ctx.reply(
+                    `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
+                );
+            });
+            return;
+        } else {
+            ctx.reply(message, { reply_markup: goBackKeyboard });
+            return;
+        }
+    } catch (error) {
+        ctx.reply("Something went wrong :(", {
+            reply_markup: goBackKeyboard
         });
-        return;
-    } else {
-        ctx.reply(message, { reply_markup: goBackKeyboard });
-        return;
     }
 }
 
