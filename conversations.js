@@ -66,7 +66,7 @@ async function handleReminder(ctx, conversation) {
 
     if (responseMessage) {
         const timing = [...responseMessage];
-        if (timing.length === 4) {
+        if (timing.length === 4 && isArrayOnlyNumbers(timing)) {
             const hours = timing.slice(0, 2).join("");
             const minutes = timing.slice(-2).join("");
             if (hours < 24 && minutes < 60) {
