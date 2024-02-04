@@ -28,10 +28,22 @@ Welcome to Nursify, your personal health assistant on Telegram! Nursify is a Tel
 
 ## Technologies Used
 
--   [Grammy](https://github.com/grammyjs/grammy): A Telegram bot framework for Javascript.
+-   [Grammy](https://github.com/grammyjs/grammy) A Telegram bot framework for Javascript.
 
 -   [Tessearct](https://github.com/tesseract-ocr/tesseract) OCR (Optical Character Recognition) which is used to extract text from images.
 
--   [OpenAI](https://openai.com/) GPT (Generative Pre-trained Transformer): Employed for generating simplified explanations.
+-   [OpenAI](https://openai.com/) GPT (Generative Pre-trained Transformer) Employed for generating simplified explanations.
 
--   [Supabase](https://supabase.com/) Supabase used for storing of information.
+-   [Supabase](https://supabase.com/) Used for storing of information.
+
+## Contact
+
+-   Tham Kei Lok (UIUX Designer/Backend Engineer) - [LinkedIn](https://www.linkedin.com/in/keiloktql/)
+
+-   Chai Pin Zheng (DevOps Engineer/Backend Engineer) - [LinkedIn](https://www.linkedin.com/in/chai-pin-zheng-5610921aa/)
+
+-   Derrick Lim (Database Engineer/Backend Engineer) - [LinkedIn](https://www.linkedin.com/in/derrick-lim-1986b0206/)
+
+-   Tan Yu Hoe (AI Engineer/Researcher) - [LinkedIn](https://www.linkedin.com/in/yu-hoe-tan/)
+
+Project Link: [https://github.com/keiloktql/LifeHack2023-EcoCart](https://github.com/keiloktql/LifeHack2023-EcoCart)
