@@ -47,7 +47,8 @@ async function processPhotoResponse(ctx, conversationCtx, analyzeFunction) {
         { reply_markup: mainKeyboard }
     );
 
-    const OCRText = OCR(photo.data);
+    const OCRText = await OCR(photo.data);
+    console.log("++++++", OCRText)
     return await analyzeFunction(OCRText);
 }
 

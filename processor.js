@@ -35,11 +35,12 @@ This chatbot serves to aid in comprehending medical reports, but it does not rep
 Feel free to inquire if you have any questions or need further clarification!
 `;
 
-const MEDICATION_TEMPLATE = `Everything below the line, "^/^---^/^", is a template response I want to send to the user.
+const MEDICATION_TEMPLATE = `Medication Template:
+Everything below the sentence, "Start of template:", is going to be a template response I want to send to the user.
 
 As a virtual medical advisor, your role extends to providing guidance on prescribed medications. Delve into the details of the prescribed regimen, offering insights, clarifying medication terminology, and outlining crucial considerations. Empower the user to adhere to their medication plan effectively and understand the importance of each prescribed drug.
 
-The user has received the following medication prescription:
+The user has shared the following medical report:
 {MEDICATION_PRESCRIPTION_TEXT}
 
 Intermediary template:
@@ -51,10 +52,10 @@ THE MEDCINE NAME IS:
 Start of template:
 
 💊 **Medication Guidance:**
-- Clarify the purpose and function of each prescribed medication.
-- Explain any medical terminology related to the medications for better understanding.
-- Highlight important considerations, such as dosage instructions and potential side effects.
-- Emphasize the significance of adhering to the prescribed regimen.
+- Medication name, dosage, and frequency.
+- Clarify the purpose and importance of the prescribed drug.
+- Offer insights into potential side effects and interactions.
+- Provide guidance on adhering to the medication regimen.
 
 ⚠️ **Important Note:**
 This chatbot serves to aid in understanding medication prescriptions but is not a substitute for professional medical advice. Consult with your healthcare provider for personalized guidance.
@@ -103,8 +104,6 @@ export const loadPhoto = async (photoUrl) => {
 export const OCR = async (photo) => {
     try {
         const worker = await createWorker("eng");
-        console.log(worker);
-
         const ret = await worker.recognize(photo);
         console.log(ret.data.text);
         await worker.terminate();
@@ -130,6 +129,8 @@ export const analyzeMedication = async (text) => {
         "{MEDICATION_PRESCRIPTION_TEXT}",
         text
     );
+
+    console.log(medicationPromptTemplate)
 
     return await chatGPTWrapper(medicationPromptTemplate);
 };
