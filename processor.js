@@ -3,6 +3,7 @@ import axios from "axios";
 import OpenAI from "openai";
 import { createWorker } from "tesseract.js";
 import supabase from "./supabaseClient.js";
+import { LOG } from "./constants.js";
 
 const openai = new OpenAI({
     apiKey: process.env.OPENAI_API_KEY // This is the default and can be omitted
@@ -76,7 +77,7 @@ const chatGPTWrapper = async (prompt) => {
 
         return gptResponse.choices[0].message.content;
     } catch (error) {
-        console.error("Error in OpenAI API:", error.message);
+        LOG(chalk.red("Error in OpenAI API:", error.message));
         // Handle the error as per your application's requirements
         return "Error occurred during analysis";
     }

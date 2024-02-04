@@ -58,6 +58,14 @@ async function processTextResponse(ctx, responseMessage, analyzeFunction) {
     return await analyzeFunction(responseMessage);
 }
 
+async function continueConvo(ctx) {
+    try {
+        console.log(ctx.message.text);
+    } catch (error) {
+        LOG(chalk.red(error));
+    }
+}
+
 async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
     try {
         const conversationCtx = await conversation.wait();
@@ -93,6 +101,8 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         switch (requestType) {
             case "report":
                 ctx.reply(("👩‍⚕️: ", analysis), { reply_markup: mainKeyboard });
+                const test = await ctx.wait();
+                continueConvo(test);
                 return;
             case "medication":
                 ctx.reply(("👩‍⚕️: ", analysis), {
