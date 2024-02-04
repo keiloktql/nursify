@@ -3,7 +3,7 @@ import {
     analyzeMedicalReport,
     analyzeMedication,
     enterReminder
-} from "./backend.js";
+} from "./processor.js";
 import {
     goBackKeyboard,
     mainKeyboard,

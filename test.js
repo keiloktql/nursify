@@ -1,10 +1,10 @@
- // Test the file, backend.js
-import { OCR, analyzeMedicalReport } from "./backend.js";
+// Test the file, backend.js
+import { OCR, analyzeMedicalReport } from "./processor.js";
 
 // Create an IIFE
 (async () => {
-  // Test the explainMedicalReport function
-  const OCR_MEDICAL_REPORT = `Fair; CHAL PIN ZHENG Date Pred: 3/2/2024 4:24 PM
+    // Test the explainMedicalReport function
+    const OCR_MEDICAL_REPORT = `Fair; CHAL PIN ZHENG Date Pred: 3/2/2024 4:24 PM
   ‘Gncer: Male, DOB: 18/2/2003, ge: 0yrs wc:
   Frid 8: CHALPIN ZHENG Phone: -, Enat:
   Free rc: Ministry of efence Patent Portal Primary Care Proacr: Pooe:
@@ -43,8 +43,8 @@ import { OCR, analyzeMedicalReport } from "./backend.js";
   No Comments found
   Retrieve fo: sunrise
   Eeeaty S01 Snices sve System Administrator) (7/8/2023 10:25
-  Last odd By: SCM, Services sve (System Administrator) (8/8/2023 7:48`
+  Last odd By: SCM, Services sve (System Administrator) (8/8/2023 7:48`;
 
-  const analysis = await analyzeMedicalReport(OCR_MEDICAL_REPORT);
-  console.log(analysis);
+    const analysis = await analyzeMedicalReport(OCR_MEDICAL_REPORT);
+    console.log(analysis);
 })();

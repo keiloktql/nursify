@@ -1,9 +1,9 @@
 import "dotenv/config";
-import { BOT_TOKEN, LOG, PORT, URL } from "./constants.js";
+import { BOT_TOKEN, LOG, PORT } from "./constants.js";
 import chalk from "chalk";
 import express from "express";
 
-import { Bot, webhookCallback, session } from "grammy";
+import { Bot, session } from "grammy";
 import { conversations, createConversation } from "@grammyjs/conversations";
 import "dotenv/config";
 import {
