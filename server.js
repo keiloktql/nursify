@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { BOT_TOKEN, LOG, PORT } from "./constants.js";
+import { BOT_TOKEN, PORT } from "./constants.js";
 import chalk from "chalk";
 import express from "express";
 
@@ -13,6 +13,7 @@ import {
     setReminders
 } from "./conversations.js";
 import { mainKeyboard } from "./keyboards.js";
+import { LOG } from "./common/functions.js";
 
 const app = express();
 

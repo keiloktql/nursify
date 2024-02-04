@@ -13,7 +13,8 @@ import {
     setReminderKeyboard
 } from "./keyboards.js";
 import { isArrayOnlyNumbers } from "./common/functions.js";
-import { BOT_TOKEN, LOG } from "./constants.js";
+import { BOT_TOKEN } from "./constants.js";
+import { LOG } from "./common/functions.js";
 
 const RequestType = {
     REPORT: "report",
