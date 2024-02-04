@@ -42,8 +42,13 @@ As a virtual medical advisor, your role extends to providing guidance on prescri
 The user has received the following medication prescription:
 {MEDICATION_PRESCRIPTION_TEXT}
 
+Intermediary template:
+THE MEDCINE NAME IS: 
+{
+  "name": "Medicine Name",
+}
+
 Start of template:
-^/^---^/^
 
 💊 **Medication Guidance:**
 - Clarify the purpose and function of each prescribed medication.
@@ -122,7 +127,7 @@ export const analyzeMedicalReport = async (text) => {
 
 export const analyzeMedication = async (text) => {
     const medicationPromptTemplate = MEDICATION_TEMPLATE.replace(
-        "{MEDICAL_REPORT_TEXT}",
+        "{MEDICATION_PRESCRIPTION_TEXT}",
         text
     );
 

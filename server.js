@@ -71,7 +71,7 @@ bot.on("message:text", async (ctx) => {
 
     if (text === "Go back") {
         return ctx.reply(
-            "Welcome to Nursify, seek explanations or medication conditions!",
+            "👩‍⚕️: Welcome to Nursify, seek explanations or medication conditions!",
             {
                 reply_markup: mainKeyboard
             }

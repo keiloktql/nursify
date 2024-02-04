@@ -12,4 +12,5 @@ setInterval(() => {
         }
         console.log(`stdout: ${stdout}`);
     });
-}, 20000);
+    console.log("STANDBY")
+}, 10000);

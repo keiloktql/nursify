@@ -15,6 +15,49 @@ import {
 import { isArrayOnlyNumbers } from "./common/functions.js";
 import { BOT_TOKEN, LOG } from "./constants.js";
 
+const RequestType = {
+    REPORT: "report",
+    MEDICATION: "medication"
+};
+
+function handleGoBack(ctx) {
+    ctx.reply(
+        "👩‍⚕️: Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.",
+        { reply_markup: mainKeyboard }
+    );
+}
+
+function handleInvalidResponse(ctx) {
+    ctx.reply(
+        "👩‍⚕️: Invalid response type. Please upload a photo or provide text explanation.",
+        { reply_markup: mainKeyboard }
+    );
+}
+
+async function processPhotoResponse(ctx, conversationCtx, analyzeFunction) {
+    const file = await conversationCtx.getFile();
+    const path = file.file_path;
+    const photo = await axios.get(
+        `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`,
+        { responseType: "arraybuffer" }
+    );
+
+    ctx.reply(
+        "👩‍⚕️: Processing your image! Standby... it might take a little longer!",
+        { reply_markup: mainKeyboard }
+    );
+
+    const OCRText = OCR(photo.data);
+    return await analyzeFunction(OCRText);
+}
+
+async function processTextResponse(ctx, responseMessage, analyzeFunction) {
+    ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
+        reply_markup: mainKeyboard
+    });
+    return await analyzeFunction(responseMessage);
+}
+
 async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
     try {
         const conversationCtx = await conversation.wait();
@@ -23,53 +66,36 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         const isPhotoUploaded = responsePhoto !== undefined;
 
         if (responseMessage === "Go back") {
-            ctx.reply(
-                "👩‍⚕️: Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.",
-                {
-                    reply_markup: mainKeyboard
-                }
-            );
+            handleGoBack(ctx);
             return;
         }
 
         if (!(isPhotoUploaded || responseMessage)) {
-            ctx.reply(
-                "👩‍⚕️: Invalid response type. Please upload a photo or provide text explanation.",
-                { reply_markup: mainKeyboard }
-            );
+            handleInvalidResponse(ctx);
             return;
         }
 
         let analysis = "";
         if (isPhotoUploaded) {
-            const file = await conversationCtx.getFile(); // valid for at least 1 hour
-            const path = file.file_path; // file path on Bot API server
-            const photo = await axios.get(
-                `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`,
-                {
-                    responseType: "arraybuffer"
-                }
+            analysis = await processPhotoResponse(
+                ctx,
+                conversationCtx,
+                analyzeFunction
             );
-            ctx.reply(
-                "👩‍⚕️: Processing your image! Standby... it might take a little longer!",
-                { reply_markup: mainKeyboard }
-            );
-            const OCRText = OCR(photo.data);
-            analysis = await analyzeFunction(OCRText);
         } else {
-            ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
-                reply_markup: mainKeyboard
-            });
-            analysis = await analyzeFunction(responseMessage);
+            analysis = await processTextResponse(
+                ctx,
+                responseMessage,
+                analyzeFunction
+            );
         }
 
         switch (requestType) {
             case "report":
-                ctx.reply("👩‍⚕️: ", analysis, { reply_markup: mainKeyboard });
+                ctx.reply(("👩‍⚕️: ", analysis), { reply_markup: mainKeyboard });
                 return;
             case "medication":
-                // TODO: REPLACE REPLY TEXT WITH GENERATED RESPONSE
-                ctx.reply("This is paracetemol", {
+                ctx.reply(("👩‍⚕️: ", analysis), {
                     reply_markup: setReminderKeyboard
                 });
                 return;
