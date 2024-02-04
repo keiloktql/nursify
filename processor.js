@@ -5,7 +5,7 @@ import { createWorker } from "tesseract.js";
 import supabase from "./supabaseClient.js";
 
 const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY, // This is the default and can be omitted
+    apiKey: process.env.OPENAI_API_KEY // This is the default and can be omitted
 });
 
 const MEDICAL_REPORT_TEMPLATE = `Medical Report Template:
@@ -58,83 +58,86 @@ Feel free to ask if you have any questions or need further explanation!
 `;
 
 const chatGPTWrapper = async (prompt) => {
-  // OpenAI API with chat completion
-  try {
-    const gptResponse = await openai.chat.completions.create({
-      messages: [{ role: "user", content: prompt }],
-      model: "gpt-3.5-turbo",
-      temperature: 0.1,
-      frequency_penalty: 0,
-      presence_penalty: 0,
-    });
+    // OpenAI API with chat completion
+    try {
+        const gptResponse = await openai.chat.completions.create({
+            messages: [{ role: "user", content: prompt }],
+            model: "gpt-3.5-turbo",
+            temperature: 0.1,
+            frequency_penalty: 0,
+            presence_penalty: 0
+        });
 
-    return gptResponse.choices[0].message.content;
-  } catch (error) {
-    console.error("Error in OpenAI API:", error.message);
-    // Handle the error as per your application's requirements
-    return "Error occurred during analysis";
-  }
+        return gptResponse.choices[0].message.content;
+    } catch (error) {
+        console.error("Error in OpenAI API:", error.message);
+        // Handle the error as per your application's requirements
+        return "Error occurred during analysis";
+    }
 };
 
 export const loadPhoto = async (photoUrl) => {
-  try {
-    // Fetch image data
-    const response = await axios.get(photoUrl, { responseType: "arraybuffer" });
+    try {
+        // Fetch image data
+        const response = await axios.get(photoUrl, {
+            responseType: "arraybuffer"
+        });
 
-    if (!response.data) {
-      throw new Error("Empty response or invalid image data");
+        if (!response.data) {
+            throw new Error("Empty response or invalid image data");
+        }
+
+        // Return the raw image data
+        return response.data;
+    } catch (error) {
+        console.error("Error loading photo: ", error.message);
+        throw error;
     }
-
-    // Return the raw image data
-    return response.data;
-  } catch (error) {
-    console.error("Error loading photo: ", error.message);
-    throw error;
-  }
 };
 
 export const OCR = async (photo) => {
-  try {
-    const worker = await createWorker("eng");
-    console.log(worker)
-    const ret = await worker.recognize(photo);
-    console.log(ret.data.text);
-    await worker.terminate();
+    try {
+        const worker = await createWorker("eng");
+        console.log(worker);
+        console.log(photo);
+        const ret = await worker.recognize(photo);
+        console.log(ret.data.text);
+        await worker.terminate();
 
-    return ret.data.text;
-  } catch (error) {
-    console.log("Err: ", error);
-  }
+        return ret.data.text;
+    } catch (error) {
+        console.log("Err: ", error);
+    }
 };
 
 export const analyzeMedicalReport = async (text) => {
-  // Add the medical report text to the prompt template
-  const medicalReportPromptTemplate = MEDICAL_REPORT_TEMPLATE.replace(
-    "{MEDICAL_REPORT_TEXT}",
-    text
-  );
+    // Add the medical report text to the prompt template
+    const medicalReportPromptTemplate = MEDICAL_REPORT_TEMPLATE.replace(
+        "{MEDICAL_REPORT_TEXT}",
+        text
+    );
 
-  return await chatGPTWrapper(medicalReportPromptTemplate);
+    return await chatGPTWrapper(medicalReportPromptTemplate);
 };
 
 export const analyzeMedication = async (text) => {
-  const medicationPromptTemplate = MEDICATION_TEMPLATE.replace(
-    "{MEDICAL_REPORT_TEXT}",
-    text
-  );
+    const medicationPromptTemplate = MEDICATION_TEMPLATE.replace(
+        "{MEDICAL_REPORT_TEXT}",
+        text
+    );
 
-  return await chatGPTWrapper(medicationPromptTemplate);
+    return await chatGPTWrapper(medicationPromptTemplate);
 };
 
 export const enterReminder = async (hours, minutes) => {
-  const { error } = await supabase.from("reminder").insert({
-    user_id: "qwe123qwe123",
-    reminder_name: "AntiCancer",
-    reminder_cron: `${minutes} ${hours} * * *`,
-  });
-  if (!error) {
-    return `A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`;
-  } else {
-    return "An error has occured :(";
-  }
+    const { error } = await supabase.from("reminder").insert({
+        user_id: "qwe123qwe123",
+        reminder_name: "AntiCancer",
+        reminder_cron: `${minutes} ${hours} * * *`
+    });
+    if (!error) {
+        return `A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`;
+    } else {
+        return "An error has occured :(";
+    }
 };

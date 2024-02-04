@@ -1,3 +1,4 @@
+import chalk from "chalk";
 import {
     OCR,
     analyzeMedicalReport,
@@ -12,44 +13,49 @@ import {
 import { isArrayOnlyNumbers } from "./common/functions.js";
 
 async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
-    const conversationCtx = await conversation.wait();
-    const responseMessage = conversationCtx.message.text || "";
-    const isPhotoUploaded = conversationCtx.message.photo !== undefined;
+    try {
+        const conversationCtx = await conversation.wait();
+        const responseMessage = conversationCtx.message.text || "";
+        const isPhotoUploaded = conversationCtx.message.photo !== undefined;
 
-    if (!(isPhotoUploaded || responseMessage)) {
-        ctx.reply(
-            "Invalid response type. Please upload a photo or provide text explanation.",
-            { reply_markup: mainKeyboard }
-        );
-        return;
-    }
-
-    let analysis = "";
-
-    if (isPhotoUploaded) {
-        const OCRText = OCR();
-        analysis = await analyzeFunction(OCRText);
-    }
-
-    if (responseMessage) {
-        analysis = await analyzeFunction(responseMessage);
-    }
-
-    switch (requestType) {
-        case "report":
-            ctx.reply(analysis, { reply_markup: mainKeyboard });
+        if (!(isPhotoUploaded || responseMessage)) {
+            ctx.reply(
+                "Invalid response type. Please upload a photo or provide text explanation.",
+                { reply_markup: mainKeyboard }
+            );
             return;
-        case "medication":
-            // TODO: REPLACE REPLY TEXT WITH GENERATED RESPONSE
-            ctx.reply("This is paracetemol", {
-                reply_markup: setReminderKeyboard
-            });
-            return;
-        default:
-            ctx.reply("Something went wrong 😥", {
-                reply_markup: mainKeyboard
-            });
-            return;
+        }
+
+        let analysis = "";
+
+        if (isPhotoUploaded) {
+            const photo = conversationCtx.message.photo;
+            const OCRText = OCR(photo);
+            analysis = await analyzeFunction(OCRText);
+        }
+
+        if (responseMessage) {
+            analysis = await analyzeFunction(responseMessage);
+        }
+
+        switch (requestType) {
+            case "report":
+                ctx.reply(analysis, { reply_markup: mainKeyboard });
+                return;
+            case "medication":
+                // TODO: REPLACE REPLY TEXT WITH GENERATED RESPONSE
+                ctx.reply("This is paracetemol", {
+                    reply_markup: setReminderKeyboard
+                });
+                return;
+            default:
+                ctx.reply("Something went wrong 😥", {
+                    reply_markup: mainKeyboard
+                });
+                return;
+        }
+    } catch (error) {
+        LOG(chalk.error("An error occured", error));
     }
 }
 
