@@ -34,12 +34,12 @@ bot.use(conversations());
 bot.use(createConversation(explainMedicalReport));
 bot.use(createConversation(explainMedication));
 bot.use(createConversation(manageReminders));
-bot.use(createConversation(setReminders)) 
+bot.use(createConversation(setReminders));
 
 // COMMANDS
 bot.command("start", (ctx) =>
     ctx.reply(
-        "Welcome to Nursify, seek explanations or medication conditions",
+        "👩‍⚕️: Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.",
         {
             reply_markup: mainKeyboard
         }
@@ -66,7 +66,7 @@ bot.on("message:text", async (ctx) => {
 
     if (text === "Set new reminder") {
         await ctx.conversation.enter("setReminders");
-        return
+        return;
     }
 
     if (text === "Go back") {

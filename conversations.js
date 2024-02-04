@@ -24,7 +24,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
 
         if (!(isPhotoUploaded || responseMessage)) {
             ctx.reply(
-                "Invalid response type. Please upload a photo or provide text explanation.",
+                "👩‍⚕️: Invalid response type. Please upload a photo or provide text explanation.",
                 { reply_markup: mainKeyboard }
             );
             return;
@@ -40,15 +40,22 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
                     responseType: "arraybuffer"
                 }
             );
+            ctx.reply(
+                "👩‍⚕️: Processing your image! Standby... it might take a little longer!",
+                { reply_markup: mainKeyboard }
+            );
             const OCRText = OCR(photo.data);
             analysis = await analyzeFunction(OCRText);
         } else {
+            ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
+                reply_markup: mainKeyboard
+            });
             analysis = await analyzeFunction(responseMessage);
         }
 
         switch (requestType) {
             case "report":
-                ctx.reply(analysis, { reply_markup: mainKeyboard });
+                ctx.reply("👩‍⚕️: ", analysis, { reply_markup: mainKeyboard });
                 return;
             case "medication":
                 // TODO: REPLACE REPLY TEXT WITH GENERATED RESPONSE
@@ -57,7 +64,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
                 });
                 return;
             default:
-                ctx.reply("Something went wrong 😥", {
+                ctx.reply("👩‍⚕️: Something went wrong 😥", {
                     reply_markup: mainKeyboard
                 });
                 return;
@@ -90,7 +97,7 @@ async function handleReminder(ctx, conversation) {
 
     if (isError) {
         ctx.reply(
-            "Invalid response, check if your timing is correctly formatted (e.g 0915)",
+            "👩‍⚕️: Invalid response, check if your timing is correctly formatted (e.g 0915)",
             { reply_markup: goBackKeyboard }
         );
         await handleReminder(ctx, conversation);
@@ -102,13 +109,13 @@ async function fetchReminders(ctx, conversation) {
     const { message, data } = await getReminder();
 
     if (data !== null) {
-        ctx.reply("These are your current reminders:", {
+        ctx.reply("👩‍⚕️: These are your current reminders:", {
             reply_markup: goBackKeyboard
         });
         data.map((reminder) => {
             const cronArray = reminder.reminder_cron.split(" ");
             ctx.reply(
-                `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
+                `👩‍⚕️: Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
             );
         });
         return;
@@ -120,7 +127,7 @@ async function fetchReminders(ctx, conversation) {
 
 export async function explainMedicalReport(conversation, ctx) {
     ctx.reply(
-        "Upload a picture of the medical report or send a message of the medical condition",
+        "👩‍⚕️: Upload a picture of the medical report or send a message of the medical condition",
         { reply_markup: goBackKeyboard }
     );
 
@@ -128,7 +135,7 @@ export async function explainMedicalReport(conversation, ctx) {
 }
 
 export async function explainMedication(conversation, ctx) {
-    ctx.reply("Upload a picture or send the name of the medication", {
+    ctx.reply("👩‍⚕️: Upload a picture or send the name of the medication", {
         reply_markup: goBackKeyboard
     });
 
@@ -138,7 +145,7 @@ export async function explainMedication(conversation, ctx) {
 
 export async function setReminders(conversation, ctx) {
     ctx.reply(
-        "To set a reminder, type in the time you would like to be reminded at in the 24 hour format (e.g: 0030, 0900, 1345, etc)",
+        "👩‍⚕️: To set a reminder, type in the time you would like to be reminded at in the 24 hour format (e.g: 0030, 0900, 1345, etc)",
         { reply_markup: goBackKeyboard }
     );
 
@@ -146,7 +153,7 @@ export async function setReminders(conversation, ctx) {
 }
 
 export async function manageReminders(conversation, ctx) {
-    ctx.reply("Fetching your reminders...");
+    ctx.reply("👩‍⚕️: Fetching your reminders...");
 
     await fetchReminders(ctx, conversation);
 }
