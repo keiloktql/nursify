@@ -21,5 +21,7 @@ export const remindersKeyboard = new Keyboard()
 export const chooseLanguageKeyboard = new Keyboard()
     .text("English 🇬🇧")
     .text("Chinese 🇨🇳")
+    .row()
     .text("Malay 🇲🇾")
     .text("Tamil 🇮🇳")
+    .resized();

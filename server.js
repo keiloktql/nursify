@@ -12,7 +12,7 @@ import {
     manageReminders,
     setReminders
 } from "./conversations.js";
-import { mainKeyboard } from "./keyboards.js";
+import { mainKeyboard, chooseLanguageKeyboard } from "./keyboards.js";
 import { LOG } from "./common/functions.js";
 import { authenticateUser, createUser } from "./processor.js";
 
@@ -80,20 +80,12 @@ bot.on("message:text", async (ctx) => {
     }
 
     if (text === "English 🇬🇧") {
-        async function newUser() {
-            return await createUser("ENGLISH");
-        }
-        const response = newUser();
-
-        if (response) {
-            return ctx.reply(response, {
+        return ctx.reply(
+            `👩‍⚕️: You have selected English 🇬🇧! Welcome to Nursify! How can I assist you today? Feel free to seek explanations on medical reports or inquire about medication conditions.`,
+            {
                 reply_markup: mainKeyboard
-            });
-        } else {
-            return ctx.reply("Something went wrong :(", {
-                reply_markup: mainKeyboard
-            });
-        }
+            }
+        );
     }
 
     if (text === "Chinese 🇨🇳") {

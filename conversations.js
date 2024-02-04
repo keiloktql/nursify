@@ -8,7 +8,6 @@ import {
     getReminder
 } from "./processor.js";
 import {
-    chooseLanguageKeyboard,
     goBackKeyboard,
     mainKeyboard,
     setReminderKeyboard
