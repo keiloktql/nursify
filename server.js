@@ -9,7 +9,8 @@ import "dotenv/config";
 import {
     explainMedicalReport,
     explainMedication,
-    manageReminders
+    manageReminders,
+    setReminders
 } from "./conversations.js";
 import { mainKeyboard } from "./keyboards.js";
 
@@ -33,6 +34,7 @@ bot.use(conversations());
 bot.use(createConversation(explainMedicalReport));
 bot.use(createConversation(explainMedication));
 bot.use(createConversation(manageReminders));
+bot.use(createConversation(setReminders)) 
 
 // COMMANDS
 bot.command("start", (ctx) =>
@@ -60,6 +62,11 @@ bot.on("message:text", async (ctx) => {
     if (text === "Manage Reminders ⏰") {
         await ctx.conversation.enter("manageReminders");
         return;
+    }
+
+    if (text === "Set new reminder") {
+        await ctx.conversation.enter("setReminders");
+        return
     }
 
     if (text === "Go back") {
