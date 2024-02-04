@@ -35,7 +35,10 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
             const file = await conversationCtx.getFile(); // valid for at least 1 hour
             const path = file.file_path; // file path on Bot API server
             const photo = await axios.get(
-                `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`
+                `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`,
+                {
+                    responseType: "arraybuffer"
+                }
             );
             const OCRText = OCR(photo.data);
             analysis = await analyzeFunction(OCRText);
