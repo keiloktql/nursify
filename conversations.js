@@ -43,6 +43,42 @@ async function processTextResponse(ctx, responseMessage, analyzeFunction) {
     return await analyzeFunction(responseMessage);
 }
 
+async function handleContinueConvo(
+    ctx,
+    conversation,
+    OCRText,
+    responseMessage,
+    analysis
+) {
+    let continueConversation = true;
+    while (continueConversation) {
+        // Get the next response from the user
+        let userResponse = await conversation.wait();
+        let nextResponse = userResponse.message.text || "";
+        if (nextResponse === "Go back") {
+            continueConversation = false;
+            handleGoBack(ctx);
+            return;
+        }
+
+        let initialResponse = OCRText || responseMessage;
+        ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
+            reply_markup: goBackKeyboard
+        });
+        let conversationResponse = await chatGPTWrapper(
+            "This is what the user initially shared: " +
+                initialResponse +
+                "This is the response that was generated based on what the user shared: " +
+                analysis.response +
+                "This is what the user have asked based on the generated response" +
+                nextResponse
+        );
+        ctx.reply(("👩‍⚕️: ", conversationResponse.response), {
+            reply_markup: goBackKeyboard
+        });
+    }
+}
+
 async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
     try {
         const conversationCtx = await conversation.wait();
@@ -86,44 +122,32 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         }
 
         switch (requestType) {
-            case RequestType.REPORT:
+            case RequestType.REPORT: {
                 ctx.reply(("👩‍⚕️: ", analysis.response), {
                     reply_markup: goBackKeyboard
                 });
-
-                let continueConversation = true;
-                while (continueConversation) {
-                    // Get the next response from the user
-                    let userResponse = await conversation.wait();
-                    let nextResponse = userResponse.message.text || "";
-                    if (nextResponse === "Go back") {
-                        continueConversation = false;
-                        handleGoBack(ctx);
-                        return;
-                    }
-
-                    let initialResponse = OCRText || responseMessage;
-                    ctx.reply("👩‍⚕️: Standby... I'm processing your message!", {
-                        reply_markup: goBackKeyboard
-                    });
-                    let conversationResponse = await chatGPTWrapper(
-                        "This is what the user initially shared: " +
-                            initialResponse +
-                            "This is the response that was generated based on what the user shared: " +
-                            analysis.response +
-                            "This is what the user have asked based on the generated response" +
-                            nextResponse
-                    );
-                    ctx.reply(("👩‍⚕️: ", conversationResponse.response), {
-                        reply_markup: goBackKeyboard
-                    });
-                }
+                handleContinueConvo(
+                    ctx,
+                    conversation,
+                    OCRText,
+                    responseMessage,
+                    analysis
+                );
                 return;
-            case RequestType.MEDICATION:
+            }
+            case RequestType.MEDICATION: {
                 ctx.reply(("👩‍⚕️: ", analysis.response), {
                     reply_markup: setReminderKeyboard
                 });
+                handleContinueConvo(
+                    ctx,
+                    conversation,
+                    OCRText,
+                    responseMessage,
+                    analysis
+                );
                 return;
+            }
             default:
                 ctx.reply("👩‍⚕️: Something went wrong 😥", {
                     reply_markup: mainKeyboard
