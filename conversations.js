@@ -178,8 +178,7 @@ async function handleReminder(ctx, conversation) {
             if (hours < 24 && minutes < 60) {
                 isError = false;
                 const response = await enterReminder(hours, minutes);
-                ctx.reply(response, { reply_markup: goBackKeyboard });
-                await handleReminder(ctx, conversation);
+                ctx.reply(response, { reply_markup: mainKeyboard });
                 return;
             }
         }

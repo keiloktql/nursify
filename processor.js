@@ -148,7 +148,7 @@ export const enterReminder = async (hours, minutes) => {
         reminder_cron: `${minutes} ${hours} * * *`
     });
     if (!error) {
-        return `A reminder has been set for ${hours}${minutes}! To set another timing for this medication, please type another timing.`;
+        return `A reminder has been set for ${hours}${minutes}!`;
     } else {
         return error.message;
     }

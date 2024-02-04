@@ -1,6 +1,8 @@
+![Marketing](https://github.com/keiloktql/nursify/blob/master/public/assets/marketing/marketing-github.png?raw=true)
+
 # Nursify Telegram Bot
 
-Welcome to Nursify, your personal health assistant on Telegram! Nursify is a Telegram bot designed to assist users in understanding medical reports, medications, and conditions. Users can submit text or photos containing medical information, and Nursify will process the content using OCR (Optical Character Recognition) to extract text and GPT (Generative Pre-trained Transformer) to generate a simplified explanation. Additionally, Nursify collects user data, including the user's country of origin, and stores it in a Supabase database. The bot also features a reminder function to set reminders for medication.
+Welcome to Nursify, your personal health assistant on Telegram! Nursify is a Telegram bot designed to assist users in understanding medical reports, medications, and conditions. Users can submit text or photos containing medical information, and Nursify will process the content using OCR (Optical Character Recognition) to extract text and GPT (Generative Pre-trained Transformer) to generate a simplified explanation. Additionally, Nursify collects user localization data, including the user's language, and stores it in a Supabase database to provide a more tailored experience. The bot also features a reminder function to set reminders for medication.
 
 ## Features
 
@@ -10,7 +12,7 @@ Welcome to Nursify, your personal health assistant on Telegram! Nursify is a Tel
 
 -   **GPT-based Explanation**: The bot employs GPT (Generative Pre-trained Transformer) to generate simplified explanations of medications and medical conditions.
 
--   **User Data Collection**: Nursify collects and stores user data, including the user's country of origin, in a Supabase database.
+-   **Localization**: Nursify aims to provide a personalized experience by collecting and storing user localization data, including the user's preferred language, in a Supabase database. This allows Nursify to tailor its responses and information to the user's language preference, ensuring a more effective and user-friendly interaction.
 
 -   **Reminder Function**: Users can set reminders for medication.
 
