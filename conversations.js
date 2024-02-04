@@ -91,12 +91,12 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
         }
 
         switch (requestType) {
-            case "report":
+            case RequestType.REPORT:
                 ctx.reply(("👩‍⚕️: ", analysis.response), {
                     reply_markup: mainKeyboard
                 });
                 return;
-            case "medication":
+            case RequestType.MEDICATION:
                 ctx.reply(("👩‍⚕️: ", analysis.response), {
                     reply_markup: setReminderKeyboard
                 });
@@ -169,7 +169,12 @@ export async function explainMedicalReport(conversation, ctx) {
         { reply_markup: goBackKeyboard }
     );
 
-    await handleResponse(ctx, conversation, analyzeMedicalReport, "report");
+    await handleResponse(
+        ctx,
+        conversation,
+        analyzeMedicalReport,
+        RequestType.REPORT
+    );
 }
 
 export async function explainMedication(conversation, ctx) {
@@ -178,7 +183,12 @@ export async function explainMedication(conversation, ctx) {
     });
 
     // Send the analysis to the user
-    await handleResponse(ctx, conversation, analyzeMedication, "medication");
+    await handleResponse(
+        ctx,
+        conversation,
+        analyzeMedication,
+        RequestType.MEDICATION
+    );
 }
 
 export async function setReminders(conversation, ctx) {
