@@ -1,4 +1,4 @@
-![Marketing](https://github.com/keiloktql/nursify/blob/master/public/assets/marketing/marketing-github.png?raw=true)
+![Marketing](https://raw.githubusercontent.com/keiloktql/nursify/main/marketing/marketing-github.png)
 
 # Nursify Telegram Bot
 
