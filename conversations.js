@@ -101,9 +101,8 @@ async function fetchReminders(ctx, conversation) {
         ctx.reply(message, { reply_markup: goBackKeyboard });
         data.map((reminder) => {
             const cronArray = reminder.reminder_cron.split("");
-            const reminderTiming = cronArray[1] + cronArray[0];
-            ctx.reply(
-                `Medication: ${reminder.reminder_name}\nTime: ${reminderTiming}`
+            return ctx.reply(
+                `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
             );
         });
         return;
