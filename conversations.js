@@ -63,9 +63,9 @@ async function handleReminder(ctx, conversation) {
 
     if (responseMessage) {
         const timing = [...responseMessage];
-        if (timing.length === 4 && isArrayOnlyNumbers(timing)) {
-            const hours = array.slice(0, 2).join("");
-            const minutes = array.slice(-2).join("");
+        if (timing.length === 4) {
+            const hours = timing.slice(0, 2).join("");
+            const minutes = timing.slice(-2).join("");
             if (hours < 24 && minutes < 60) {
                 response = await enterReminder(hours, minutes);
                 ct.reply(reponse, { reply_markup: goBackKeyboard });
