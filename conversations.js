@@ -12,7 +12,7 @@ import {
     setReminderKeyboard
 } from "./keyboards.js";
 import { isArrayOnlyNumbers } from "./common/functions.js";
-import { LOG } from "./constants.js";
+import { BOT_TOKEN, LOG } from "./constants.js";
 
 async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
     try {
@@ -31,14 +31,12 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
 
         let analysis = "";
         if (isPhotoUploaded) {
-            const photoId = photoObj.file_id;
             const file = await conversationCtx.getFile(); // valid for at least 1 hour
             const path = file.file_path; // file path on Bot API server
             const photo = await axios.get(
                 `https://api.telegram.org/file/bot${BOT_TOKEN}/${path}`
             );
-            console.log(photo);
-            const OCRText = OCR(photo);
+            const OCRText = OCR(photo.data);
             analysis = await analyzeFunction(OCRText);
         } else {
             analysis = await analyzeFunction(responseMessage);
@@ -61,7 +59,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
                 return;
         }
     } catch (error) {
-        LOG(chalk.error("An error occured", error));
+        LOG(chalk.red(error));
     }
 }
 

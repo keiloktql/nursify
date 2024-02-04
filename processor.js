@@ -99,7 +99,7 @@ export const OCR = async (photo) => {
     try {
         const worker = await createWorker("eng");
         console.log(worker);
-        console.log(photo);
+
         const ret = await worker.recognize(photo);
         console.log(ret.data.text);
         await worker.terminate();
