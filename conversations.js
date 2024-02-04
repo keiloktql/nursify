@@ -139,7 +139,12 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
 async function handleReminder(ctx, conversation) {
     const conversationCtx = await conversation.wait();
     const responseMessage = conversationCtx.message.text || "";
-    isError = true;
+    let isError = true;
+
+    if (responseMessage === "Go back") {
+        handleGoBack(ctx);
+        return;
+    }
 
     if (responseMessage) {
         const timing = [...responseMessage];
