@@ -40,7 +40,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
             ctx.reply(analysis, { reply_markup: mainKeyboard });
             return;
         case "medication":
-            //TODO: REPLACE REPLY TEXT WITH GENERATED RESPONSE
+            // TODO: REPLACE REPLY TEXT WITH GENERATED RESPONSE
             ctx.reply("This is paracetemol", {
                 reply_markup: setReminderKeyboard
             });
