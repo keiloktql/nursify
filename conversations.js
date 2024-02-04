@@ -96,6 +96,8 @@ async function handleReminder(ctx, conversation) {
 }
 
 async function fetchReminders(ctx, conversation) {
+  const conversationCtx = await conversation.wait();
+  
     try {
         const { message, data } = await getReminder();
         console.log(data)
