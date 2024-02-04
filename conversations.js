@@ -4,7 +4,8 @@ import {
     OCR,
     analyzeMedicalReport,
     analyzeMedication,
-    enterReminder
+    enterReminder,
+    getReminder
 } from "./processor.js";
 import {
     goBackKeyboard,
@@ -67,6 +68,7 @@ async function handleResponse(ctx, conversation, analyzeFunction, requestType) {
 async function handleReminder(ctx, conversation) {
     const conversationCtx = await conversation.wait();
     const responseMessage = conversationCtx.message.text || "";
+    isError = true;
 
     if (responseMessage) {
         const timing = [...responseMessage];
@@ -74,19 +76,41 @@ async function handleReminder(ctx, conversation) {
             const hours = timing.slice(0, 2).join("");
             const minutes = timing.slice(-2).join("");
             if (hours < 24 && minutes < 60) {
+                isError = false;
                 const response = await enterReminder(hours, minutes);
                 ctx.reply(response, { reply_markup: goBackKeyboard });
                 await handleReminder(ctx, conversation);
-                return
+                return;
             }
         }
     }
 
-    ctx.reply(
-        "Invalid response, check if your timing is correctly formatted (e.g 0915)",
-        { reply_markup: setReminderKeyboard }
-    );
-    return;
+    if (isError) {
+        ctx.reply(
+            "Invalid response, check if your timing is correctly formatted (e.g 0915)",
+            { reply_markup: goBackKeyboard }
+        );
+        await handleReminder(ctx, conversation);
+        return;
+    }
+}
+
+async function fetchReminders(ctx, conversation) {
+    const { message, data } = await getReminder();
+    if (data) {
+        ctx.reply(message, { reply_markup: goBackKeyboard });
+        data.map((reminder) => {
+            const cronArray = reminder.reminder_cron.split("");
+            const reminderTiming = cronArray[1] + cronArray[0];
+            ctx.reply(
+                `Medication: ${reminder.reminder_name}\nTime: ${reminderTiming}`
+            );
+        });
+        return;
+    } else {
+        ctx.reply(message, { reply_markup: goBackKeyboard });
+        return;
+    }
 }
 
 export async function explainMedicalReport(conversation, ctx) {
@@ -118,4 +142,6 @@ export async function setReminders(conversation, ctx) {
 
 export async function manageReminders(conversation, ctx) {
     ctx.reply("Fetching your reminders...");
+
+    await fetchReminders();
 }
