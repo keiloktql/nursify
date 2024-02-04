@@ -147,12 +147,13 @@ async function fetchReminders(ctx, conversation) {
     const { message, data } = await getReminder();
 
     if (data !== null) {
-        ctx.reply("👩‍⚕️: These are your current reminders:");
+        ctx.reply("👩‍⚕️: These are your current reminders:", {
+            reply_markup: setReminderKeyboard
+        });
         data.map((reminder) => {
             const cronArray = reminder.reminder_cron.split(" ");
             ctx.reply(
-                `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`,
-                { reply_markup: setReminderKeyboard }
+                `Medication: ${reminder.reminder_name}\nTime: ${cronArray[1]}${cronArray[0]}`
             );
         });
         return;
