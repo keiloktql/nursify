@@ -144,7 +144,7 @@ export const analyzeMedication = async (text) => {
 export const enterReminder = async (hours, minutes) => {
     const { error } = await supabase.from("reminder").insert({
         user_id: "qwe123qwe123",
-        reminder_name: "AntiCancer",
+        reminder_name: "Paracetamol",
         reminder_cron: `${minutes} ${hours} * * *`
     });
     if (!error) {
