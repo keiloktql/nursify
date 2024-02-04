@@ -205,7 +205,7 @@ export const authenticateUser = async () => {
 
     const telegramid = await getTelegramUserId();
     const language = await checkRowExists(telegramid);
-    if (userData) {
+    if (language) {
         return { id: telegramid, language: language };
     } else {
         return { id: telegramid, language: null };
