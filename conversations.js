@@ -142,8 +142,8 @@ export async function setReminders(conversation, ctx) {
     await handleReminder(ctx, conversation);
 }
 
-export async function manageReminders(ctx, conversation) {
+export async function manageReminders(conversation, ctx) {
     ctx.reply("Fetching your reminders...");
 
-    await fetchReminders();
+    await fetchReminders(ctx, conversation);
 }
